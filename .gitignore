@@ -16,6 +16,7 @@ coverage
 out
 .env
 ### 换行符配置 ###
+
 # 自动标准化为 LF
 * text=auto eol=lf
 
