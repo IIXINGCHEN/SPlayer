@@ -200,6 +200,9 @@ import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { addSongToNext } from "@/utils/Player";
 import { musicData, siteData, siteStatus } from "@/stores";
+import AddPlaylist from "@/components/Modal/AddPlaylist.vue";
+import DownloadSong from "@/components/Modal/DownloadSong.vue";
+import CloudSongMatch from "@/components/Modal/CloudSongMatch.vue";
 
 const router = useRouter();
 const data = siteData();

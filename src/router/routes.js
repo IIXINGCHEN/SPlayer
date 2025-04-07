@@ -308,9 +308,16 @@ const routes = [
     path: "/song",
     name: "song",
     meta: {
-      title: "全局设置",
+      title: "歌曲详情",
     },
     component: () => import("@/views/Song.vue"),
+    beforeEnter: (to, _, next) => {
+      if (!to.query.id) {
+        next({ path: "/403" });
+      } else {
+        next();
+      }
+    }
   },
   // 测试页面
   {

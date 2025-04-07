@@ -1,137 +1,174 @@
 <template>
-  <div ref="wrapperRef" v-bind="$attrs"></div>
+  <div ref="wrapperRef" class="amll-background" v-bind="$attrs"></div>
 </template>
 
-<script setup>
-// 基于Steven-xmh的`applemusic-like-lyrics`包实现背景渲染
+<script setup lang="ts">
+// 基于AMLL库实现背景渲染
 import {
   BackgroundRender as CoreBackgroundRender,
   AbstractBaseRenderer,
   BaseRenderer,
   MeshGradientRenderer,
+  EplorRenderer
 } from "@applemusic-like-lyrics/core";
-import { ref, onMounted, onUnmounted, watch, defineExpose } from "vue";
+import { ref, onMounted, onUnmounted, watchEffect, defineExpose } from "vue";
 
-const props = defineProps({
+// 定义组件属性
+interface BackgroundRenderProps {
   // 专辑封面URL
-  album: {
-    type: String,
-    default: ""
-  },
+  album?: string;
+  // 是否为视频
+  albumIsVideo?: boolean;
   // 帧率
-  fps: {
-    type: Number,
-    default: undefined
-  },
+  fps?: number;
   // 是否播放
-  playing: {
-    type: Boolean,
-    default: true
-  },
+  playing?: boolean;
   // 流动速度
-  flowSpeed: {
-    type: Number,
-    default: undefined
-  },
+  flowSpeed?: number;
   // 是否有歌词
-  hasLyric: {
-    type: Boolean,
-    default: true
-  },
+  hasLyric?: boolean;
   // 低频音量
-  lowFreqVolume: {
-    type: Number,
-    default: 1.0
-  },
+  lowFreqVolume?: number;
   // 渲染比例
-  renderScale: {
-    type: Number,
-    default: 0.5
-  },
+  renderScale?: number;
   // 静态模式
-  staticMode: {
-    type: Boolean,
-    default: false
-  },
+  staticMode?: boolean;
   // 渲染器
-  renderer: {
-    type: Function,
-    default: undefined
+  renderer?: typeof AbstractBaseRenderer;
+}
+
+// 定义组件引用类型
+interface BackgroundRenderRef {
+  bgRender: any;
+  wrapperEl: HTMLDivElement | undefined;
+}
+
+const props = withDefaults(defineProps<BackgroundRenderProps>(), {
+  album: "",
+  albumIsVideo: false,
+  fps: 60,
+  playing: true,
+  flowSpeed: 1.0,
+  hasLyric: true,
+  lowFreqVolume: 1.0,
+  renderScale: 0.5,
+  staticMode: false,
+  renderer: undefined
+});
+
+const bgRenderRef = ref<AbstractBaseRenderer>();
+const wrapperRef = ref<HTMLDivElement>();
+
+// 初始化背景渲染器
+const initBackgroundRender = () => {
+  if (!wrapperRef.value) return;
+  
+  // 使用提供的渲染器或默认使用EplorRenderer（流体背景）
+  bgRenderRef.value = CoreBackgroundRender.new(props.renderer ?? EplorRenderer);
+  
+  // 设置初始属性
+  if (props.album) bgRenderRef.value?.setAlbum(props.album, props.albumIsVideo);
+  bgRenderRef.value?.setFPS(props.fps);
+  
+  // 设置播放状态
+  if (props.playing) {
+    bgRenderRef.value?.resume();
+  } else {
+    bgRenderRef.value?.pause();
+  }
+  
+  // 设置其他属性
+  bgRenderRef.value?.setFlowSpeed(props.flowSpeed);
+  bgRenderRef.value?.setStaticMode(props.staticMode);
+  bgRenderRef.value?.setRenderScale(props.renderScale);
+  bgRenderRef.value?.setLowFreqVolume(props.lowFreqVolume);
+  bgRenderRef.value?.setHasLyric(props.hasLyric);
+
+  // 将渲染器元素添加到包装器中
+  const canvasEl = bgRenderRef.value.getElement();
+  canvasEl.style.width = "100%";
+  canvasEl.style.height = "100%";
+  wrapperRef.value.appendChild(canvasEl);
+};
+
+// 使用watchEffect监听属性变化
+watchEffect(() => {
+  if (bgRenderRef.value && props.album) {
+    bgRenderRef.value.setAlbum(props.album, props.albumIsVideo);
   }
 });
 
-const coreBGRenderRef = ref(null);
-const wrapperRef = ref(null);
+watchEffect(() => {
+  if (bgRenderRef.value && props.fps) {
+    bgRenderRef.value.setFPS(props.fps);
+  }
+});
 
-onMounted(() => {
-  coreBGRenderRef.value = CoreBackgroundRender.new(props.renderer ?? MeshGradientRenderer);
-  if (props.album) coreBGRenderRef.value?.setAlbum(props.album);
-  if (props.fps) coreBGRenderRef.value?.setFPS(props.fps);
+watchEffect(() => {
+  if (!bgRenderRef.value) return;
+  
   if (props.playing) {
-    coreBGRenderRef.value?.resume();
+    bgRenderRef.value.resume();
   } else {
-    coreBGRenderRef.value?.pause();
+    bgRenderRef.value.pause();
   }
-  if (props.flowSpeed) coreBGRenderRef.value?.setFlowSpeed(props.flowSpeed);
-  coreBGRenderRef.value?.setStaticMode(props.staticMode);
-  coreBGRenderRef.value?.setRenderScale(props.renderScale);
-  coreBGRenderRef.value?.setLowFreqVolume(props.lowFreqVolume);
-  coreBGRenderRef.value?.setHasLyric(props.hasLyric);
+});
 
-  if (coreBGRenderRef.value) {
-    const el = coreBGRenderRef.value.getElement();
-    el.style.width = "100%";
-    el.style.height = "100%";
-    wrapperRef.value?.appendChild(el);
+watchEffect(() => {
+  if (bgRenderRef.value && props.flowSpeed !== undefined) {
+    bgRenderRef.value.setFlowSpeed(props.flowSpeed);
   }
+});
+
+watchEffect(() => {
+  if (bgRenderRef.value && props.staticMode !== undefined) {
+    bgRenderRef.value.setStaticMode(props.staticMode);
+  }
+});
+
+watchEffect(() => {
+  if (bgRenderRef.value && props.renderScale !== undefined) {
+    bgRenderRef.value.setRenderScale(props.renderScale);
+  }
+});
+
+watchEffect(() => {
+  if (bgRenderRef.value && props.lowFreqVolume !== undefined) {
+    bgRenderRef.value.setLowFreqVolume(props.lowFreqVolume);
+  }
+});
+
+watchEffect(() => {
+  if (bgRenderRef.value && props.hasLyric !== undefined) {
+    bgRenderRef.value.setHasLyric(props.hasLyric);
+  }
+});
+
+// 生命周期钩子
+onMounted(() => {
+  initBackgroundRender();
 });
 
 onUnmounted(() => {
-  coreBGRenderRef.value?.dispose();
-});
-
-watch(() => props.album, (newValue) => {
-  if (newValue) coreBGRenderRef.value?.setAlbum(newValue);
-});
-
-watch(() => props.fps, (newValue) => {
-  if (typeof newValue !== 'undefined') coreBGRenderRef.value?.setFPS(newValue);
-});
-
-watch(() => props.playing, (newValue) => {
-  if (newValue) {
-    coreBGRenderRef.value?.resume();
-  } else {
-    coreBGRenderRef.value?.pause();
+  if (bgRenderRef.value) {
+    bgRenderRef.value.dispose();
   }
 });
 
-watch(() => props.flowSpeed, (newValue) => {
-  if (typeof newValue !== 'undefined') coreBGRenderRef.value?.setFlowSpeed(newValue);
-});
-
-watch(() => props.staticMode, (newValue) => {
-  coreBGRenderRef.value?.setStaticMode(newValue);
-});
-
-watch(() => props.renderScale, (newValue) => {
-  if (newValue) coreBGRenderRef.value?.setRenderScale(newValue);
-});
-
-watch(() => props.lowFreqVolume, (newValue) => {
-  if (newValue) coreBGRenderRef.value?.setLowFreqVolume(newValue);
-});
-
-watch(() => props.hasLyric, (newValue) => {
-  if (newValue !== undefined) coreBGRenderRef.value?.setHasLyric(newValue);
-});
-
-defineExpose({
+// 导出组件引用
+defineExpose<BackgroundRenderRef>({
+  bgRender: bgRenderRef,
   wrapperEl: wrapperRef,
-  bgRender: coreBGRenderRef,
 });
 </script>
 
-<style scoped>
-/* 背景渲染器样式 */
+<style lang="scss" scoped>
+.amll-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
 </style>

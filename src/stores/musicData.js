@@ -33,6 +33,10 @@ const useMusicDataStore = defineStore("musicData", {
         lrc: [],
         // 逐字歌词数据
         yrc: [],
+        // AMLL普通歌词
+        lrcAMData: [],
+        // AMLL逐字歌词
+        yrcAMData: [],
       },
       // 本地歌曲目录
       localSongPath: [],

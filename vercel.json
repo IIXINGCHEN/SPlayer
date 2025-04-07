@@ -1,3 +1,16 @@
 {
-  "rewrites": [{ "source": "/:path*", "destination": "/index.html" }]
+  "rewrites": [
+    {
+      "source": "/:path",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/ncmapi/:apiurl*",
+      "destination": "${process.env.RENDERER_VITE_SERVER_URL}/:apiurl*"
+    },
+    {
+      "source": "/unblock/:match*",
+      "destination": "${process.env.VITE_UNM_API}:match*"
+    }
+  ]
 }

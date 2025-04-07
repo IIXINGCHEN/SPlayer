@@ -20,9 +20,13 @@
     <n-card class="set-item">
       <div class="name">
         音乐资源自动缓存
-        <n-text class="tip"> 可能会造成加载缓慢，将在下一首播放或刷新时生效 </n-text>
+        <n-text class="tip"> 非客户端可能会导致清除列表后播放音乐仍然存在的问题 </n-text>
       </div>
-      <n-switch v-model:value="useMusicCache" :round="false" />
+      <n-switch 
+        v-model:value="useMusicCache" 
+        :round="false" 
+        :disabled="!checkPlatform.electron()"
+      />
     </n-card>
     <n-card class="set-item">
       <div class="name">音乐渐入渐出</div>

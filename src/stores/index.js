@@ -5,6 +5,7 @@ import useSiteSettingsStore from "@/stores/siteSettings";
 import useMusicDataStore from "@/stores/musicData";
 import useIndexedDBStore from "@/stores/indexedDB";
 
+// 导出所有store
 export const siteData = () => useSiteDataStore();
 export const siteStatus = () => useSiteStatusStore();
 export const siteSettings = () => useSiteSettingsStore();

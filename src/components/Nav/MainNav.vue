@@ -67,6 +67,19 @@
     </div>
     <div class="right">
       <!-- 全局菜单 -->
+      <n-button
+        :focusable="false"
+        class="settings"
+        circle
+        quaternary
+        @click="openSettings"
+      >
+        <template #icon>
+          <n-icon>
+            <SvgIcon icon="round-settings" />
+          </n-icon>
+        </template>
+      </n-button>
       <n-dropdown
         :show="mainMenuShow"
         :show-arrow="true"
@@ -95,6 +108,8 @@
       <TitleBar v-if="checkPlatform.electron()" />
     </div>
   </nav>
+  <!-- 设置弹窗组件 -->
+  <settings ref="settingsRef" />
 </template>
 
 <script setup>
@@ -103,14 +118,16 @@ import { storeToRefs } from "pinia";
 import { siteStatus, siteSettings } from "@/stores";
 import { checkPlatform } from "@/utils/helper";
 import { useRouter } from "vue-router";
+import { ref } from "vue";
+import settings from "@/components/Modal/Settings.vue"
 import Menu from "@/components/Global/Menu";
 import packageJson from "@/../package.json";
 
 const router = useRouter();
 const status = siteStatus();
-const settings = siteSettings();
+const sitesettings = siteSettings();
 const { asideMenuCollapsed, searchInputFocus } = storeToRefs(status);
-const { showGithub, showSider, themeAutoCover } = storeToRefs(settings);
+const { showGithub, showSider, themeAutoCover } = storeToRefs(sitesettings);
 
 // 站点信息
 const siteVersion = packageJson.version;
@@ -122,6 +139,18 @@ const openGithub = () => {
   console.log(packageJson.github);
   window.open(packageJson.github);
 };
+
+const settingsRef = ref(null)
+const openSettings = () => {
+  if (settingsRef.value) {
+    settingsRef.value.showModal();
+  }
+};
+/*
+const openSettings = () => {
+  window.location.href = "/#/setting"; 
+}
+*/
 
 // 主菜单渲染
 const mainMenuShow = ref(false);
@@ -220,8 +249,15 @@ const mainMenuOptions = computed(() => [
     }
   }
   .github {
-    margin-left: 12px;
+    margin-left: 12px; /* 左边距12px，用于与其他元素保持间距 */
     -webkit-app-region: no-drag;
+  }
+  .settings {
+    margin-right: 12px; /* 右边距12px，用于与其他元素保持间距 */
+    -webkit-app-region: no-drag;
+    @media (max-width: 700px) {
+      display: none;
+    }
   }
   .main-menu {
     -webkit-app-region: no-drag;

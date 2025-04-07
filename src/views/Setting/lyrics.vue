@@ -49,16 +49,24 @@
         歌词滚动位置
         <n-text class="tip">歌词高亮时所处的位置</n-text>
       </div>
-      <n-select v-model:value="lyricsBlock" :options="[
+      <n-select 
+        :options="[
           {
             label: '靠近顶部',
             value: 'start',
           },
           {
-            label: '水平居中',
+            label: '水平居中', 
             value: 'center',
           },
-        ]" class="set" />
+        ]"
+        :value="lyricsBlock"
+        @update:value="(val) => {
+          lyricsBlock = val;
+          alignAnchor = val === 'start' ? 'top' : 'center';
+        }"
+        class="set" 
+      />
     </n-card>
     <n-card class="set-item">
       <div class="name">
@@ -124,14 +132,14 @@
         显示歌词翻译
         <n-text class="tip">是否在具有翻译歌词时显示</n-text>
       </div>
-      <n-switch v-model:value="showTransl" :round="false" />
+      <n-switch v-model:value="showTransl" :disabled="useAMLyrics" :round="false" />
     </n-card>
     <n-card class="set-item">
       <div class="name">
         显示歌词音译
         <n-text class="tip">是否在具有音译歌词时显示</n-text>
       </div>
-      <n-switch v-model:value="showRoma" :round="false" />
+      <n-switch v-model:value="showRoma" :disabled="useAMLyrics" :round="false" />
     </n-card>
     <n-card class="set-item">
       <div class="name">

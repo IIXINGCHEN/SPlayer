@@ -17,7 +17,7 @@
       <n-tab name="setTab4"> 歌词 </n-tab>
       <n-tab name="setTab5"> 下载 </n-tab>
       <n-tab name="setTab6"> 其他 </n-tab>
-      <n-tab name="setTab7"> TestOptions </n-tab>
+      <!--n-tab name="setTab7"> TestOptions </n-tab-->
     </n-tabs>
     <!-- 设置项 -->
     <n-scrollbar
@@ -41,7 +41,7 @@
       <!-- 其他 -->
       <Other />
       <!--TestOptions-->
-      <TestOptions />
+      <!--TestOptions /-->
     </n-scrollbar>
   </div>
 </template>
@@ -58,7 +58,7 @@ import Player from "@/views/Setting/player.vue";
 import Lyrics from "@/views/Setting/lyrics.vue";
 import Download from "@/views/Setting/download.vue";
 import Other from "@/views/Setting/other.vue";
-import TestOptions from "@/views/Setting/testoptions.vue";
+// import TestOptions from "@/views/Setting/testoptions.vue";
 
 const music = musicData();
 const status = siteStatus();
@@ -89,10 +89,11 @@ const allSetScroll = debounce((e) => {
   });
 }, 100);
 
-// 跳转
+/* 跳转
 const jump = () => {
   window.open(packageJson.github);
 };
+*/
 </script>
 
 <style lang="scss" scoped>

@@ -37,7 +37,7 @@ const useSiteSettingsStore = defineStore("siteSettings", {
       playSearch: false, // 是否播放全部搜索结果
       showPlaylistCount: true, // 是否显示播放列表数量
       showSpectrums: true, // 是否显示音乐频谱
-      useMusicCache: true, // 是否采用音乐缓存
+      useMusicCache: false, // 是否采用音乐缓存
       // 数量部分
       loadSize: 50, // 每页加载数量
       // 歌词部分
@@ -46,10 +46,10 @@ const useSiteSettingsStore = defineStore("siteSettings", {
       lyricsBlur: false, // 歌词模糊
       lyricsBold: true, // 歌词加粗
       showYrc: true, // 是否显示逐字歌词
-      lyricsStyle: "default", // 歌词样式 {default | applemusic}
       showYrcAnimation: true, // 是否显示逐字歌词动画
       lyricsPosition: "left", // 歌词位置
       lyricsBlock: "start", // 歌词滚动位置
+      alignAnchor: "top", // 歌词对齐位置
       showTransl: true, // 是否显示歌词翻译
       showRoma: true, // 是否显示歌词音译
       useAMLyrics: false, // 是否使用苹果音乐歌词

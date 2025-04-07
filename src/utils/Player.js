@@ -1,12 +1,13 @@
 import { Howl, Howler } from "howler";
 import { musicData, siteStatus, siteSettings } from "@/stores";
-import { getSongUrl, getSongLyric, songScrobble, getMusicNumUrl } from "@/api/song";
+import { getSongUrl, getSongLyric, songScrobble, getMusicNumUrl, getSongOtherUrl } from "@/api/song";
 import { checkPlatform, getLocalCoverData, getBlobUrlFromUrl } from "@/utils/helper";
 import { decode as base642Buffer } from "@/utils/base64";
 import { getSongPlayTime } from "@/utils/timeTools";
 import { getCoverGradient } from "@/utils/cover-color";
 import { isLogin } from "@/utils/auth";
-import { parseLyric, parseLocalLrc } from "@/utils/parseLyric";
+import { parseLyricsData, parseLocalLyric } from "@/utils/lyric.ts";
+import { parseLyric } from "@/utils/parseLyric";
 
 // 全局播放器
 let player;
@@ -192,15 +193,24 @@ const getFromUnblockMusic = async (data, status, playNow) => {
   try {
     console.info("🎵 开始解灰：", data);
     // 调用解灰
-    let response = await getMusicNumUrl(data.id);
-    console.log(response);
     let musicUrl = null;
-    if (response?.code === 200 && response?.data) {
-      if (response.data.source === "pyncmd") {
+    try {
+      let response = await getMusicNumUrl(data.id);
+      console.log(response);
+      if (response?.code === 200 && response?.data) {
         musicUrl = response.data.url;
-      } else if (response.data.source === "kuwo") {
-        // musicUrl = response.data.proxyUrl;
-        musicUrl = response.data.url;
+      }
+    } catch (error) {
+      console.log("getMusicNumUrl失败，尝试使用Other源：", error);
+    }
+    if (!musicUrl) {
+      try {
+        let Otherget = await getSongOtherUrl(data.name, data.artists);
+        if (Otherget?.code == 200 && Otherget?.data) {
+          musicUrl = Otherget.data.url;
+        }
+      } catch (error) {
+        console.log("getSongOtherUrl获取失败：", error);
       }
     }
     console.log(musicUrl);
@@ -617,43 +627,40 @@ const getSongLyricData = async (islocal, data) => {
   if (!data?.id) return false;
   try {
     const music = musicData();
-    const setDefaults = () => {
-      music.playSongLyric = {
-        hasLrcTran: false,
-        hasLrcRoma: false,
-        hasYrc: false,
-        hasYrcTran: false,
-        hasYrcRoma: false,
-        lrc: [],
-        yrc: [],
-        ttml: "", // 添加TTML字段用于AMLL歌词解析
-      };
-    };
     if (islocal) {
       const lyricData = await electron.ipcRenderer.invoke("getMusicLyric", data?.path);
       if (lyricData) {
-        const result = parseLocalLrc(lyricData);
-        music.playSongLyric = result ? (music.playSongLyric = result) : setDefaults();
+        // 使用parseLyric.js处理本地歌词
+        const parsedLyric = parseLyric(lyricData);
+        // 使用lyric.ts处理AMLL格式
+        const amllLyric = parseLocalLyric(lyricData);
+        // 合并结果
+        music.playSongLyric = {
+          ...parsedLyric,
+          lrcAMData: amllLyric.lrcAMData,
+          yrcAMData: amllLyric.yrcAMData
+        };
       } else {
         console.log("该歌曲暂无歌词");
-        setDefaults();
+        music.playSongLyric = parseLyric("");
       }
     } else {
       const lyricResponse = await getSongLyric(data?.id);
-      // 处理新的返回结构，lyricResponse现在包含original和ttml
-      const lyricData = lyricResponse?.original?.lrc;
-      if (lyricData) {
-        const result = parseLyric(lyricResponse.original);
-        if (result) {
-          music.playSongLyric = result;
-          // 添加TTML数据用于AMLL歌词解析
-          music.playSongLyric.ttml = lyricResponse.ttml || "";
-        } else {
-          setDefaults();
-        }
+      if (lyricResponse?.original) {
+        // 使用parseLyric.js处理基础歌词
+        const parsedLyric = parseLyric(lyricResponse.original);
+        // 使用lyric.ts处理AMLL格式
+        const amllLyric = parseLyricsData(lyricResponse.original);
+        // 合并结果
+        music.playSongLyric = {
+          lrc: parsedLyric.lrc,
+          yrc: parsedLyric.yrc,
+          lrcAMData: amllLyric.lrcAMData,
+          yrcAMData: amllLyric.yrcAMData
+        };
       } else {
         console.log("该歌曲暂无歌词");
-        setDefaults();
+        music.playSongLyric = parseLyric(null);
       }
     }
   } catch (err) {

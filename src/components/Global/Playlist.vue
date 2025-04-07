@@ -135,6 +135,7 @@ import { NText, NIcon, NModal, NButton } from "naive-ui";
 import { storeToRefs } from "pinia";
 import { musicData, siteStatus, siteSettings } from "@/stores";
 import { initPlayer, fadePlayOrPause, changePlayIndex, soundStop } from "@/utils/Player";
+import { Howl, Howler } from "howler";
 import SvgIcon from "@/components/Global/SvgIcon";
 import debounce from "@/utils/debounce";
 
@@ -195,14 +196,30 @@ const playSong = debounce(async (song, index) => {
 
 // 清空列表
 const cleanPlaylists = () => {
-  soundStop();// 调用弹窗关闭音乐
+  // 先停止当前音频播放
+  soundStop();
+  // 销毁音频实例
+  if (window.Howl && window.Howl.ctx) {
+    window.Howl.ctx.close();
+    window.Howl.ctx = null;
+  }
+  // 重置所有播放相关状态
   playIndex.value = 0;
   playList.value = [];
   playSongData.value = {};
   playListShow.value = false;
   showFullPlayer.value = false;
+  // 清除可能存在的音频缓存
+  if ('caches' in window) {
+    caches.keys().then(cacheNames => {
+      cacheNames.forEach(cacheName => {
+        if (cacheName.includes('audio')) {
+          caches.delete(cacheName);
+        }
+      });
+    });
+  }
   $message.success("已清空播放列表");
-  location.reload(true); // 针对歌曲缓存刷新页面
 };
 
 // 确认清空列表
@@ -219,6 +236,7 @@ const removeSong = async (index) => {
     return false;
   }
   // 若为当前播放
+ 
   if (index === playIndex.value) {
     playList.value.splice(index, 1);
     changePlayIndex("next", true);

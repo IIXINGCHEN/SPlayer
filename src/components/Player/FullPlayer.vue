@@ -29,8 +29,19 @@
               alt="overlay"
             />
           </template>
-          <!-- 流动背景 -->
+          <!-- AMLL流动背景 -->
           <template v-else-if="playerBackgroundType === 'animation'">
+            <BackgroundRender
+              :album="music.getPlaySongData?.coverSize?.s || music.getPlaySongData?.localCover"
+              :playing="playState"
+              :flow-speed="1.0"
+              :render-scale="0.5"
+              :has-lyric="isHasLrc"
+              :fps="60"
+            />
+          </template>
+          <!-- 传统流动背景（备用） -->
+          <template v-else-if="playerBackgroundType === 'animation-legacy'">
             <img
               v-for="item in 4"
               :key="item"
@@ -260,15 +271,12 @@
               v-if="!useAMLyrics" 
               :cursorShow="playerControlShow" 
             />
-            <!--如果要调用AMLL歌词，取消下面的注释即可-->
+            <!-- AMLL歌词组件 -->
             <AMLyric
               v-else
               :cursorShow="playerControlShow"
+              class="amll-lyric-container"
             />
-            <!--如果要调用AMLL歌词，请注释或去掉以下div标签-->
-            <!--div v-else class="amll-tip">
-              AMLL歌词组件正在开发中，敬请期待~
-            </div-->
           </div>
         </div>
       </Transition>
@@ -292,6 +300,11 @@ import throttle from "@/utils/throttle";
 import SvgIcon from "@/components/Global/SvgIcon";
 import Settings from "@/components/Modal/Settings.vue";
 import AMLyric from "./AMLyric.vue";
+import BackgroundRender from "./BackgroundRender.vue";
+import Lyric from "./Lyric.vue";
+import PlayerControl from "./PlayerControl.vue";
+import PlayerCover from "./PlayerCover.vue";
+import Spectrum from "./Spectrum.vue";
 
 const router = useRouter();
 const music = musicData();
@@ -309,13 +322,9 @@ const {
   coverBackground,
   pureLyricMode,
   playMode,
+  playState,
 } = storeToRefs(status);
 
-// 获取AM处理后的歌词数据
-const processedLyric = computed(() => ({
-  ...(playSongLyric.value || {}),
-  align: 'top' // 默认居中对齐
-}));
 
 // 是否有歌词
 const isHasLrc = computed(() => {
@@ -897,5 +906,27 @@ onUnmounted(() => {
 .v-leave-to {
   opacity: 0;
   transform: scale(0.8);
+}
+
+/* AMLL歌词样式 */
+.amll-lyric-container {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 200px);
+  overflow: hidden;
+  margin-bottom: 20px;
+  
+  .am-lyric {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding: 0 20px;
+    box-sizing: border-box;
+    overflow: visible;
+    /* 确保内容在容器内正确显示 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 }
 </style>

@@ -40,6 +40,9 @@ export const parseLyric = (data) => {
       lrc: [],
       // 逐字歌词数据
       yrc: [],
+      // AMLL格式歌词数据
+      lrcAMData: [],
+      yrcAMData: []
     };
     // 普通歌词
     if (lrcData.lrc) {
@@ -51,6 +54,17 @@ export const parseLyric = (data) => {
       result.lrc = lrcData.romalrc
         ? parseOtherLrc(result.lrc, parseLrc(lrcData.romalrc), "roma")
         : result.lrc;
+      
+      // 转换为AMLL格式
+      result.lrcAMData = result.lrc.map((line, index, lines) => ({
+        words: [{ startTime: line.time * 1000, endTime: (lines[index + 1]?.time || line.time + 5) * 1000, word: line.content }],
+        startTime: line.time * 1000,
+        endTime: (lines[index + 1]?.time || line.time + 5) * 1000,
+        translatedLyric: line.tran || "",
+        romanLyric: line.roma || "",
+        isBG: false,
+        isDuet: false
+      }));
     }
     // 逐字歌词
     if (lrcData.yrc) {
@@ -62,6 +76,21 @@ export const parseLyric = (data) => {
       result.yrc = lrcData.yromalrc
         ? parseOtherLrc(result.yrc, parseLrc(lrcData.yromalrc, false), "roma")
         : result.yrc;
+      
+      // 转换为AMLL格式
+      result.yrcAMData = result.yrc.map((line) => ({
+        words: line.contents.map(word => ({
+          startTime: word.time * 1000,
+          endTime: word.endTime * 1000,
+          word: word.content
+        })),
+        startTime: line.time * 1000,
+        endTime: line.endTime * 1000,
+        translatedLyric: line.tran || "",
+        romanLyric: line.roma || "",
+        isBG: false,
+        isDuet: false
+      }));
     }
     console.log(result);
     return result;
@@ -170,10 +199,20 @@ const parseLrc = (lyrics, isTrim = true) => {
         // 继续解析
         const [, time, text] = line.match(regex);
         const parts = time.split(":");
+        // 验证时间戳格式
+        if (parts.length < 2 || parts.some(part => isNaN(Number(part)))) {
+          console.warn("Invalid timestamp format:", time);
+          return null;
+        }
         const seconds =
           Number(parts[0]) * 60 +
           Number(parts[1]) +
           (parts.length > 2 ? Number(parts[2]) / 1000 : 0);
+        // 确保计算结果是有效数字
+        if (isNaN(seconds)) {
+          console.warn("Invalid timestamp calculation:", time);
+          return null;
+        }
         return { time: Number(seconds.toFixed(2)), content: isTrim ? text.trim() : text };
       })
       .filter((c) => c && c.content.trim() !== "");

@@ -39,23 +39,52 @@ export interface LyricLine {
 export interface LyricClickEvent {
   line: {
     getLine: () => LyricLine;
+    lyricLine?: LyricLine;
   };
 }
 
 /**
  * 弹簧参数类型
  */
-// 在SpringParams接口增加验证
+export interface SpringParam {
+  mass: number; // 质量，影响弹簧的惯性
+  damping: number; // 阻尼，影响弹簧的减速速度
+  stiffness: number; // 刚度，影响弹簧的弹力
+  soft: boolean; // 是否使用软弹簧模式
+}
 
-// 使用示例
-const springParams = {
-  posX: { 
-    mass: 1.0, 
-    damping: Math.max(0, 10.0), // 确保非负
-    stiffness: 100.0,
-    soft: false
-  }
-  // 其他参数...
+/**
+ * 弹簧参数集合
+ */
+export interface SpringParams {
+  posX?: SpringParam;
+  posY?: SpringParam;
+  scale?: SpringParam;
+  rotation?: SpringParam;
+}
+
+/**
+ * 背景渲染器引用类型
+ */
+export interface BackgroundRenderRef {
+  bgRender: any;
+  wrapperEl?: HTMLDivElement;
+}
+
+/**
+ * 背景渲染器属性类型
+ */
+export interface BackgroundRenderProps {
+  album?: string;
+  albumIsVideo?: boolean;
+  fps?: number;
+  playing?: boolean;
+  flowSpeed?: number;
+  hasLyric?: boolean;
+  lowFreqVolume?: number;
+  renderScale?: number;
+  staticMode?: boolean;
+  renderer?: any;
 }
 
 /**
@@ -75,4 +104,6 @@ export interface SongLyric {
   yrc?: Array<{time: number, endTime?: number, content: any[], tran?: string, roma?: string}>;
   ttml?: string;
   hasYrc?: boolean;
+  lrcAMData?: LyricLine[];
+  yrcAMData?: LyricLine[];
 }

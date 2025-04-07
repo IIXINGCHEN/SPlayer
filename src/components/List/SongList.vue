@@ -71,8 +71,12 @@
         <div class="info">
           <div class="title">
             <!-- 名称 -->
-            <!-- @click.stop="type !== 'dj' && !item.path ? router.push(`/song?id=${item.id}`) : null" -->
-            <n-text class="name" depth="2">
+            <n-text 
+              class="name" 
+              depth="2"
+              :style="type !== 'dj' && !item.path ? 'cursor: pointer' : ''"
+              @click.stop="type !== 'dj' && !item.path ? window.location.href = `/song?id=${item.id}` : null"
+            >
               {{ item?.name || "未知曲目" }}
             </n-text>
             <!-- 特权 -->
@@ -185,7 +189,7 @@
             depth="3"
             size="20"
             @click.stop="
-              songListDrawerRef?.drawerOpen(data, item, songsIndex + index, sourceId, type)
+              songListDropdownRef?.openDropdown($event, data, item, songsIndex + index, sourceId, type)
             "
             @dblclick.stop
           >
@@ -229,6 +233,13 @@
         @deletePlaylistSong="deletePlaylistSong"
         @delLocalSong="delLocalSong"
       />
+      <!--SongListDrawer
+        ref="songListDrawerRef"
+        @playSong="playSong"
+        @delCloudSong="delCloudSong"
+        @deletePlaylistSong="deletePlaylistSong"
+        @delLocalSong="delLocalSong"
+      /-->
       <!-- 定位歌曲 -->
       <Transition name="shrink" mode="out-in">
         <n-card
