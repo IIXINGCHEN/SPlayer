@@ -8,7 +8,7 @@
       'lyric',
       `lyric-${lyricsPosition}`,
       playCoverType,
-      { pure: pureLyricMode, 'custom-lrc': justLyricArea, 'apple-music': lyricsStyle === 'apple-music' },
+      { pure: pureLyricMode, 'custom-lrc': true, 'apple-music': lyricsStyle === 'apple-music' },
     ]"
     @mouseenter="lrcMouseStatus = lrcMousePause ? true : false"
     @mouseleave="lrcAllLeave"

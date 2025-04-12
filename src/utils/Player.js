@@ -1,6 +1,6 @@
 import { Howl, Howler } from "howler";
 import { musicData, siteStatus, siteSettings } from "@/stores";
-import { getSongUrl, getSongLyric, songScrobble, getMusicNumUrl, getSongOtherUrl } from "@/api/song";
+import { getSongUrl, getSongLyric, songScrobble, getMusicNumUrl, getSongOtherUrl, getSongLyricLegacy } from "@/api/song";
 import { checkPlatform, getLocalCoverData, getBlobUrlFromUrl } from "@/utils/helper";
 import { decode as base642Buffer } from "@/utils/base64";
 import { getSongPlayTime } from "@/utils/timeTools";
@@ -198,11 +198,16 @@ const getFromUnblockMusic = async (data, status, playNow) => {
       let response = await getMusicNumUrl(data.id);
       console.log(response);
       if (response?.code === 200 && response?.data) {
-        musicUrl = response.data.url;
+        if (response.data.proxyUrl) {
+          musicUrl = response.data.proxyUrl; 
+        } else {
+          musicUrl = response.data.url;
+        };
       }
     } catch (error) {
       console.log("getMusicNumUrl失败，尝试使用Other源：", error);
-    }
+    };
+    /*
     if (!musicUrl) {
       try {
         let Otherget = await getSongOtherUrl(data.name, data.artists);
@@ -213,6 +218,7 @@ const getFromUnblockMusic = async (data, status, playNow) => {
         console.log("getSongOtherUrl获取失败：", error);
       }
     }
+    */
     console.log(musicUrl);
     if (musicUrl) {
       // 将 http 替换为 https
@@ -646,9 +652,10 @@ const getSongLyricData = async (islocal, data) => {
       }
     } else {
       const lyricResponse = await getSongLyric(data?.id);
-      if (lyricResponse?.original) {
+      const lyricLegacy = await getSongLyricLegacy(data?.id);
+      if (lyricResponse?.original || lyricLegacy) {
         // 使用parseLyric.js处理基础歌词
-        const parsedLyric = parseLyric(lyricResponse.original);
+        const parsedLyric = parseLyric(lyricLegacy);
         // 使用lyric.ts处理AMLL格式
         const amllLyric = parseLyricsData(lyricResponse.original);
         // 合并结果
@@ -656,7 +663,13 @@ const getSongLyricData = async (islocal, data) => {
           lrc: parsedLyric.lrc,
           yrc: parsedLyric.yrc,
           lrcAMData: amllLyric.lrcAMData,
-          yrcAMData: amllLyric.yrcAMData
+          yrcAMData: amllLyric.yrcAMData,
+          // 保留原始歌词属性
+          hasLrcTran: parsedLyric.hasLrcTran,
+          hasLrcRoma: parsedLyric.hasLrcRoma,
+          hasYrc: parsedLyric.hasYrc,
+          hasYrcTran: parsedLyric.hasYrcTran,
+          hasYrcRoma: parsedLyric.hasYrcRoma
         };
       } else {
         console.log("该歌曲暂无歌词");

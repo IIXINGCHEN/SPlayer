@@ -74,8 +74,8 @@
             <n-text 
               class="name" 
               depth="2"
-              :style="type !== 'dj' && !item.path ? 'cursor: pointer' : ''"
-              @click.stop="type !== 'dj' && !item.path ? window.location.href = `/song?id=${item.id}` : null"
+              :style="type !== 'dj' && !item.path && item?.id ? 'cursor: pointer' : ''"
+              @click.stop="type !== 'dj' && !item.path && item?.id ? songDetailRef?.openDetail(item.id) : null"
             >
               {{ item?.name || "未知曲目" }}
             </n-text>
@@ -279,6 +279,7 @@
       <n-skeleton :repeat="10" text />
     </div>
   </Transition>
+<SongDetail ref="songDetailRef" />
 </template>
 
 <script setup>
@@ -289,6 +290,7 @@ import { addSongToPlayList } from "@/api/playlist";
 import { siteData, siteSettings, musicData, siteStatus } from "@/stores";
 import { initPlayer, fadePlayOrPause, addSongToNext } from "@/utils/Player";
 import { djFormatDate } from "@/utils/timeTools";
+import SongDetail from '@/components/Modal/SongDetail.vue';
 
 const router = useRouter();
 const music = musicData();
@@ -350,6 +352,7 @@ const pageNumber = ref(1);
 // 子组件
 const songListDrawerRef = ref(null);
 const songListDropdownRef = ref(null);
+const songDetailRef = ref(null);
 
 // 当前索引
 const songsIndex = computed(() => {
@@ -810,3 +813,5 @@ onBeforeUnmount(() => {
   }
 }
 </style>
+
+

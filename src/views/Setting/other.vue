@@ -99,8 +99,8 @@
     </n-card>
     <n-card class="set-item">
       <div class="name">
-        获取最新页面
-        <n-text class="tip">获取网页最新页面, 适用于Vercel更新推送无法正常接收</n-text>
+        清除PWA缓存
+        <n-text class="tip">此操作会清除PWA缓存并拉取新的版本, 适用于同步仓库部署完成后使用</n-text>
       </div>
       <n-button strong secondary type="error" @click="getNewPage"> 获取 </n-button>
     </n-card>

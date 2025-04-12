@@ -751,6 +751,7 @@ onUnmounted(() => {
       }
       &.pure {
         width: 100%;
+        height: calc(100vh - 210px);
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -918,7 +919,7 @@ onUnmounted(() => {
   
   .am-lyric {
     width: 100%;
-    height: 100%;
+    height: calc(100vh - 200px);
     position: relative;
     padding: 0 20px;
     box-sizing: border-box;
@@ -927,6 +928,17 @@ onUnmounted(() => {
     display: flex;
     flex-direction: column;
     justify-content: center;
+  }
+  &.pure {
+    text-align: center;
+    :deep(.am-lyric) {
+      height: calc(100vh - 250px);
+      margin: 0;
+      padding: 0 80px;
+      div {
+        transform-origin: center !important;
+      }
+    }
   }
 }
 </style>

@@ -17,6 +17,31 @@
           56: '最大',
         }" />
     </n-card>
+         <n-card class="set-item">
+      <div class="name">
+        歌词字体
+        <n-text class="tip">选择您偏好的字体</n-text>
+      </div>
+      <n-select
+        v-model:value="lyricsFont"
+        :options="[
+          {
+            label: 'LXGW WenKai',
+            value: 'LXGW WenKai',
+          },
+          {
+            label: 'HarmonyOS Sans',
+            value: 'HarmonyOS Sans', 
+          },
+          {
+            label: 'PingFang SC',
+            value: 'PingFang SC',
+          },
+        ]"
+        class="set"
+        @update:value="updateLyricsFont"
+      />
+    </n-card>
     <n-card class="set-item">
       <div class="name">
         智能暂停滚动
@@ -169,5 +194,11 @@ const {
   lyricsBold,
   useAMLyrics,
   useAMSpring,
+  lyricsFont,
 } = storeToRefs(settings);
+
+// 更新全局歌词字体
+const updateLyricsFont = () => {
+  document.documentElement.style.setProperty('--main-font-family-lyric', `"${settings.lyricsFont}", system-ui, -apple-system, sans-serif`);
+}
 </script>

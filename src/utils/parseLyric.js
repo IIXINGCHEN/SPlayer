@@ -76,21 +76,6 @@ export const parseLyric = (data) => {
       result.yrc = lrcData.yromalrc
         ? parseOtherLrc(result.yrc, parseLrc(lrcData.yromalrc, false), "roma")
         : result.yrc;
-      
-      // 转换为AMLL格式
-      result.yrcAMData = result.yrc.map((line) => ({
-        words: line.contents.map(word => ({
-          startTime: word.time * 1000,
-          endTime: word.endTime * 1000,
-          word: word.content
-        })),
-        startTime: line.time * 1000,
-        endTime: line.endTime * 1000,
-        translatedLyric: line.tran || "",
-        romanLyric: line.roma || "",
-        isBG: false,
-        isDuet: false
-      }));
     }
     console.log(result);
     return result;

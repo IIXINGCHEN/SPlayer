@@ -355,7 +355,7 @@ export const downloadFile = async (data, song, lyric, tlyric, options) => {
       }
       if (options.downloadLyrics && options.downloadLyricsToFile && options.downloadMeta) {
         zipFile.file(songName + ".lrc", lyric);
-        zipFile.file(songName + "zh.lrc", tlyric);
+        zipFile.file(songName + "-中文歌词.lrc", tlyric);
       }
       if (zipFile) {
         blob = await zipFile.generateAsync({ type: 'blob' });

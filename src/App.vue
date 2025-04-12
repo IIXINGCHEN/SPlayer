@@ -87,6 +87,7 @@ import userSignIn from "@/utils/userSignIn";
 import globalShortcut from "@/utils/globalShortcut";
 import globalEvents from "@/utils/globalEvents";
 import packageJson from "@/../package.json";
+import { checkWebUpdates, getWebUpdates } from "@/api/other";
 
 const router = useRouter();
 const music = musicData();
@@ -136,7 +137,7 @@ if ("serviceWorker" in navigator) {
       });
     } else {
       console.info("站点资源有更新，请刷新以应用更新");
-      $message.info("新更新已推送更新到服务器，请刷新以应用更新喵~", {
+      $message.info("有PWA更新推送, 刷新页面以应用更新", {
         closable: true,
         duration: 0,
       });
@@ -160,6 +161,18 @@ const showAnnouncements = () => {
     });
   }
 };
+
+const checkUpdatesWeb = () => {
+  const isLatest = checkWebUpdates();
+  const updates = getWebUpdates();
+  if (isLatest === false && updates !== null) {
+    $message.warning("有 v."+ updates + " 的版本更新, 请前往 GitHub 仓库同步最新版本并在设置页面清除PWA缓存或者等待PWA更新推送")
+  } else {
+    $message.info("当前已是最新版本 v." + packageJson.version, {
+      duration: 2000, 
+    })
+  }
+}; 
 
 // 站点源代码出现错误 or 网络出现问题
 const canNotConnect = (error) => {
@@ -186,6 +199,20 @@ onMounted(async () => {
   window.$canNotConnect = canNotConnect;
   // 主播放器
   await initPlayer(autoPlay.value);
+  // 初始化字体设置
+  try {
+    const storedSettings = JSON.parse(localStorage.getItem('siteSettings') || '{}');
+    const { webFonts, fontBold, lyricsFont } = storedSettings;
+    if (webFonts && lyricsFont) {
+      document.documentElement.style.setProperty('--main-font-family', `"${webFonts}", system-ui, -apple-system, sans-serif`);
+      document.documentElement.style.setProperty('--main-font-family-lyric', `"${lyricsFont}", system-ui, -apple-system, sans-serif`);
+    }
+    if (typeof fontBold === 'boolean') {
+      document.documentElement.style.setProperty('font-weight', fontBold ? 'bold' : 'normal');
+    }
+  } catch (error) {
+    console.warn('初始化字体设置失败:', error);
+  }
   // 更改全局字体
   settings.changeSystemFonts();
   // 全局事件
@@ -200,6 +227,8 @@ onMounted(async () => {
   if (autoCheckUpdates.value) checkUpdates();
   // 显示公告
   showAnnouncements();
+  // 检查PWA更新
+  checkUpdatesWeb();
 });
 
 onUnmounted(() => {

@@ -2,7 +2,7 @@
   <Transition name="fade">
     <div
       :key="currentLyrics?.[0]?.startTime"
-      :class="['amll-lyric', { pure: isPureLyricMode }]"
+      :class="['amll-lyric', { pure: pureLyricMode }]"
     >
       <LyricPlayer
         ref="lyricPlayerRef"
@@ -17,8 +17,8 @@
         :enableInterludeDots="true"
         :style="{
           '--amll-lyric-view-color': mainColor,
-          '--amll-lyric-player-font-size': lyricsFontSize + 'px',
-          'font-weight': lyricsFontBold ? 'bold' : 'normal',
+          '--amll-lyric-player-font-size': isMobile ? '25px' : lyricsFontSize + 'px',
+          'font-weight': lyricsBold ? 'bold' : 'normal',
           'font-family': lyricsFont !== 'PingFang SC' ? lyricsFont : '',
           'visibility': 'visible',
           // 设置歌词组件的不透明度为1，确保歌词完全可见
@@ -41,11 +41,10 @@ import { LyricPlayer } from '@applemusic-like-lyrics/vue';
 import { LyricLine } from '@applemusic-like-lyrics/core';
 import { musicData, siteSettings, siteStatus } from '@/stores';
 import { parseTTMLToAMLL } from '@/utils/processTTML.ts';
-import { setSeek, getSeek } from '@/utils/Player';
+import { setSeek, getSeek, fadePlayOrPause } from '@/utils/Player.js';
 import { storeToRefs } from 'pinia';
 import type { LyricClickEvent, LyricPlayerRef } from '@/types/amll.ts';
 import { useRafFn } from '@vueuse/core';
-import { get } from 'http';
 
 // 接收cursorShow属性
 defineProps({
@@ -64,15 +63,15 @@ const settings = siteSettings();
 const status = siteStatus();
 
 // 从store获取状态
-const { playState, isPureLyricMode, coverTheme,playSeek } = storeToRefs(status);
+const { playState, pureLyricMode, coverTheme,playSeek } = storeToRefs(status);
 const { 
   useAMSpring, 
   lyricsBlur, 
   lyricsPosition, 
   showYrc, 
-  lyricsFontBold, 
+  lyricsBold, 
   lyricsFont,
-  lyricsFontSize = 46 // 默认字体大小
+  lyricsFontSize = 36 // 默认字体大小
 } = storeToRefs(settings);
 const { playSongLyric } = storeToRefs(music);
 
@@ -110,7 +109,7 @@ const handleLineClick = (e: LyricClickEvent) => {
   
   const time = lyricLine.startTime / 1000;
   setSeek(time);
-  playState.value = true;
+  fadePlayOrPause();
 };
 
 // 检查是否为纯音乐歌词
@@ -169,6 +168,12 @@ watch(() => status.playSeek, (newTime: number) => {
   if (lyricPlayerRef.value) {
     lyricPlayerRef.value.setCurrentTime?.(timeMs);
   }
+});
+
+// 检测移动端
+const isMobile = computed(() => {
+  if (window.innerWidth <= 768) return true;
+  return false;
 });
 
 onMounted(() => {
@@ -230,6 +235,7 @@ onBeforeUnmount(() => {
   &.pure {
     text-align: center;
     :deep(.am-lyric) {
+      height: calc(100vh - 300px);
       margin: 0;
       padding: 0 80px;
       div {

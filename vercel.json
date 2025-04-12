@@ -12,5 +12,28 @@
       "source": "/unblock/:match*",
       "destination": "${process.env.VITE_UNM_API}:match*"
     }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",  
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "${process.env.RENDERER_VITE_SITE_URL}"  
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, OPTIONS" 
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type,XXX"  
+        },
+        {
+          "key": "Access-Control-Allow-Credentials",
+          "value": "true"
+        }
+      ]
+    }
   ]
 }

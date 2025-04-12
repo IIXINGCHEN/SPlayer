@@ -1,6 +1,15 @@
 import { checkPlatform } from "@/utils/helper";
 
 const routes = [
+  // 歌曲详情
+  {
+    path: "/song",
+    name: "song-detail",
+    meta: {
+      title: "歌曲详情",
+    },
+    component: () => import("@/views/SongDetail.vue"),
+  },
   // 首页
   {
     path: "/",
@@ -112,15 +121,7 @@ const routes = [
     },
     component: () => import("@/views/Comment.vue"),
   },
-  // 歌曲详情
-  {
-    path: "/song",
-    name: "song",
-    meta: {
-      title: "歌曲详情",
-    },
-    component: () => import("@/views/Song.vue"),
-  },
+
   // 最近播放
   {
     path: "/history",

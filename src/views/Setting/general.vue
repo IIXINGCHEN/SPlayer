@@ -21,6 +21,35 @@
       />
     </n-card>
     <n-card class="set-item">
+      <div class="name">
+        全局字体
+        <n-text class="tip">选择您偏好的字体</n-text>
+      </div>
+      <n-select
+        v-model:value="settings.webFonts"
+        :options="[
+          {
+            label: 'LXGW WenKai',
+            value: 'LXGW WenKai',
+          },
+          {
+            label: 'HarmonyOS Sans',
+            value: 'HarmonyOS Sans', 
+          },
+          {
+            label: 'PingFang SC',
+            value: 'PingFang SC',
+          },
+        ]"
+        class="set"
+        @update:value="updateWebFont"
+      />
+    </n-card>
+    <n-card class="set-item">
+      <div class="name">字体加粗</div>
+      <n-switch v-model:value="settings.fontBold" :round="false" @update:value="updateWebFont(settings.webFonts)" />
+    </n-card>
+    <n-card class="set-item">
       <div class="name">明暗模式是否跟随系统</div>
       <n-switch
         v-model:value="themeAuto"
@@ -156,6 +185,12 @@ const {
 // 基础数据
 const osThemeRef = useOsTheme();
 
+// 更新全局字体
+const updateWebFont = (font) => {
+  settings.webFonts = font;
+  document.documentElement.style.setProperty('--main-font-family', `"${font}", system-ui, -apple-system, sans-serif`);
+  document.documentElement.style.setProperty('font-weight', settings.fontBold ? 'bold' : 'normal');
+};
 // 封面自动跟随变化
 const themeAutoCoverChange = (val) => {
   if ($changeThemeColor !== "undefined" && Object.keys(coverTheme.value)?.length) {

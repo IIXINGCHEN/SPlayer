@@ -1,6 +1,6 @@
 {
   "name": "splayer",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "一个部署简单且界面美观的音乐播放器",
   "main": "./out/main/index.js",
   "author": "IamFurina",

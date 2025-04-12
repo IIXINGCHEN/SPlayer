@@ -70,5 +70,8 @@ pinia.use(piniaPluginPersistedstate);
 app.use(pinia);
 // router
 app.use(router);
+
+
+
 // app
 app.mount("#app");

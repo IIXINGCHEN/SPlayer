@@ -1,5 +1,5 @@
 import axios from "@/utils/request";
-
+import packageJson from "../../package.json"
 /**
  * 杂项
  */
@@ -32,3 +32,49 @@ export const resourceLike = (id, t = 1, type = 0) => {
     },
   });
 };
+
+/**
+ * 检查更新
+ */
+export const checkWebUpdates = async () => {
+  const nowVersion = packageJson.version;
+  const rawUrl = "https://raw.githubusercontent.com/IamFurina/SPlayer/refs/heads/master-fix/package.json";
+  const response = await fetch(rawUrl,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  if (response && response?.version) {
+    const latestVersion = response.version;
+    if (nowVersion !== latestVersion) {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+};
+
+/**
+ * 获取最新版本信息
+ */
+export const getWebUpdates = async () => {
+  const rawUrl = "https://raw.githubusercontent.com/IamFurina/SPlayer/refs/heads/master-fix/package.json"
+  const getLatestVersion = await fetch(rawUrl,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  if (getLatestVersion) {
+    return getLatestVersion; 
+  } else {
+    return null;
+  }
+}
