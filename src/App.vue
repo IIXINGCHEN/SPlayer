@@ -88,6 +88,7 @@ import globalShortcut from "@/utils/globalShortcut";
 import globalEvents from "@/utils/globalEvents";
 import packageJson from "@/../package.json";
 import { checkWebUpdates, getWebUpdates } from "@/api/other";
+import { not } from "ajv/dist/compile/codegen";
 
 const router = useRouter();
 const music = musicData();
@@ -140,6 +141,20 @@ if ("serviceWorker" in navigator) {
       $message.info("有PWA更新推送, 刷新页面以应用更新", {
         closable: true,
         duration: 0,
+        action: () =>
+          h(
+            NButton,
+            {
+              text: true,
+              type: "primary",
+              onClick: () => {
+                location.reload();
+              },
+            },
+            {
+              default: () => "刷新页面",
+            },
+          ),
       });
     }
   });
@@ -162,6 +177,8 @@ const showAnnouncements = () => {
   }
 };
 
+// 原代码注释留存
+/*
 const checkUpdatesWeb = () => {
   const isLatest = checkWebUpdates();
   const updates = getWebUpdates();
@@ -173,10 +190,33 @@ const checkUpdatesWeb = () => {
     })
   }
 }; 
+*/
+
+// 检查PWA更新
+const checkUpdatesWeb = async () => {
+  if ('serviceWorker' in navigator) {
+    try {
+      const registration = await navigator.serviceWorker.ready;
+      const update = await registration.update();
+      
+      if (update) {
+        $message.info('正在检查PWA更新...', {
+          duration: 2000
+        });
+      }
+    } catch (error) {
+      console.error('PWA更新检查失败:', error);
+      $message.error('PWA更新检查失败', {
+        duration: 2000
+      });
+    }
+  }
+};
 
 // 站点源代码出现错误 or 网络出现问题
 const canNotConnect = (error) => {
   console.error("网络连接错误：", error.message);
+  /*
   $dialog.destroyAll();
   $dialog.error({
     title: "呃, 好像出了点问题(っ °Д °;)っ",
@@ -187,6 +227,16 @@ const canNotConnect = (error) => {
       location.reload();
     },
   });
+  */
+  $notification[error]({
+    title: "呃, 好像出了点问题(っ °Д °;)っ",
+    content: "如果是源代码出现问题, 请联系开发者解决; 如果是您的网络出现问题, 请检查您的网络适配器后重试",
+    positiveText: "刷新网页",
+  });
+  $message.error("网络连接错误：" + error.message, {
+    duration: 0,
+    closable: true, 
+  })
 };
 
 // 网页端键盘事件

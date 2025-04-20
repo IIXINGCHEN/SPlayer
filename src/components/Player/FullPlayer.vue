@@ -281,7 +281,7 @@
         </div>
       </Transition>
       <!-- 控制中心 -->
-      <PlayerControl />
+      <PlayerControl class="player-control"/>
       <!-- 音乐频谱 -->
       <Spectrum v-if="showSpectrums" :show="!playerControlShow" :height="60" />
       <!-- 设置弹窗 -->
@@ -810,6 +810,11 @@ onUnmounted(() => {
         }
       }
     }
+    @media (max-width: 700px) {
+      .player-control {
+        margin-bottom: 10px;
+      }
+    }
   }
 }
 // 局外样式
@@ -822,6 +827,11 @@ onUnmounted(() => {
   }
 }
 
+.player-control {
+  @media (max-width: 768px)  {
+    margin-bottom: 10px;
+  }
+}
 .amll-tip {
   width: 100%;
   height: 100%;

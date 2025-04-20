@@ -54,13 +54,13 @@ export const getSongUrl = (id, level = "standard") => {
  * @param {number} id - 要替换播放链接的音乐ID
  */
 export const getMusicNumUrl = async (id) => {
-  // const server =
-  //   process.env.NODE_ENV === "development"
-  //     ? "kuwo,qq,pyncmd,kugou"
-  //     : "qq,pyncmd,kugou";
-  const server = "pyncmd,kuwo"
-  // const server = "pyncmd,kuwo";
-  const url = `${import.meta.env.VITE_UNM_API}match?id=${id}&server=${server}`;
+  const server = "pyncmd,kuwo";
+  if (import.meta.env["RENDERER_VITE_SITE_ROOT"] === "true") {
+    var unmurl = "/api/unblock/";
+  } else {
+    var unmurl = `${import.meta.env.VITE_UNM_API}`;
+  }
+  const url = `${unmurl}match?id=${id}&server=${server}`;
   const response = await fetch(url, {
     method: "GET",
     headers: {

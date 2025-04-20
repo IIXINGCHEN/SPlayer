@@ -260,11 +260,19 @@ export const createPlayer = async (src, autoPlay = true) => {
     // 获取播放链接（非电台及云盘歌曲）
     const songUrl =
       useMusicCache && playMode !== "dj" && !playSongData.pc ? await getBlobUrlFromUrl(src) : src;
-    console.log("播放地址：", songUrl);
+    let processedUrl = songUrl;
+    // 处理音乐链接，将特定域名替换为其他域名
+    let finalUrl = processedUrl;
+    if (songUrl.includes('m804.music.126.net') || songUrl.includes('m704.music.126.net')) {
+      finalUrl = songUrl.replace(/m804\.music\.126\.net/g, 'm801.music.126.net')
+                       .replace(/m704\.music\.126\.net/g, 'm701.music.126.net');
+      processedUrl = finalUrl;
+    }
+    console.log("播放地址：", processedUrl);
     // 初始化播放器
     if (player) soundStop();
     player = new Howl({
-      src: [songUrl],
+      src: [processedUrl],
       format: ["mp3", "flac", "dolby", "webm"],
       html5: true,
       preload: "metadata",
@@ -273,6 +281,7 @@ export const createPlayer = async (src, autoPlay = true) => {
     });
     // 允许跨域
     const audioDom = player._sounds[0]._node;
+    // 设置跨域访问策略
     audioDom.crossOrigin = "anonymous";
     // 写入播放历史
     if (playMode !== "dj") music.setPlayHistory(playSongData);

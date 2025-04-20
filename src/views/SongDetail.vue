@@ -1,11 +1,14 @@
 <template>
-<SongDetail ref="songDetailRef" />
+<Transition name="fade" mode="out-in">
+  <SongDetail ref="songDetailRef" />
+</Transition>
 </template>
 
 <script setup>
 import { useRouter } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import SongDetail from '@/components/Modal/SongDetail.vue';
+import '@/style/animate.scss';
 
 const router = useRouter();
 const songDetailRef = ref(null);

@@ -419,8 +419,16 @@ export const getBlobUrlFromUrl = async (url) => {
     if (!url.startsWith("http://") && !url.startsWith("https://") && !url.startsWith("blob:")) {
       return url;
     }
+    
+    // 处理网易云音乐链接，将m804和m704替换为m801和m701
+    let processedUrl = url;
+    if (url.includes('music.126.net')) {
+      processedUrl = url.replace(/m804\.music\.126\.net/g, 'm801.music.126.net')
+                       .replace(/m704\.music\.126\.net/g, 'm701.music.126.net');
+    }
+    
     // 获取音频文件数据
-    const response = await fetch(url);
+    const response = await fetch(processedUrl);
     // 检查请求是否成功
     if (!response.ok) {
       throw new Error("获取音频资源失败：", response.statusText);

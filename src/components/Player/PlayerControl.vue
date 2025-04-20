@@ -472,6 +472,7 @@ const jumpToComment = () => {
     }
     .center {
       width: 100%;
+      flex-direction: column-reverse;
     }
   }
 }
