@@ -14,7 +14,13 @@ dist-ssr
 coverage
 *.local
 out
+
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.example
 ### 换行符配置 ###
 
 # 自动标准化为 LF
