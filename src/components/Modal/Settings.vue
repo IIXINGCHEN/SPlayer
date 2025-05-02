@@ -6,9 +6,12 @@
     :style="{
       width: isMobile ? '100vw' : '800px',
       maxWidth: '90vw',
-      backgroundColor: 'var(--n-color-modal)',
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      backdropFilter: 'blur(10px)',
+      WebkitBackdropFilter: 'blur(10px)',
       borderRadius: isMobile ? '16px 16px 0 0' : '8px',
       margin: isMobile ? 'auto auto 0 auto' : 'auto',
+      marginBottom: isMobile ? '100px' : '0px',
     }"
   >
     <div class="settings-modal">
@@ -31,12 +34,10 @@
           @update:value="settingTabChange"
         >
           <n-tab name="setTab1">常规</n-tab>
-          <n-tab name="setTab2">系统</n-tab>
-          <n-tab name="setTab3">播放</n-tab>
-          <n-tab name="setTab4">歌词</n-tab>
-          <n-tab name="setTab5">下载</n-tab>
-          <n-tab name="setTab6">其他</n-tab>
-          <!--n-tab name="setTab7">TestOptions</n-tab-->
+          <n-tab name="setTab2">播放</n-tab>
+          <n-tab name="setTab3">歌词</n-tab>
+          <n-tab name="setTab4">下载</n-tab>
+          <n-tab name="setTab5">其他</n-tab>
         </n-tabs>
         
         <!-- 添加跳转按钮 -->
@@ -61,15 +62,13 @@
         <n-scrollbar
           ref="setScrollRef"
           :style="{
-            height: `calc(100vh - ${getScrollHeight()}px)`,
+            height: '100%'
           }"
           class="all-set"
           @scroll="allSetScroll"
         >
           <!-- 常规 -->
           <General />
-          <!-- 系统 -->
-          <System />
           <!-- 播放 -->
           <Player />
           <!-- 歌词 -->
@@ -78,8 +77,6 @@
           <Download />
           <!-- 其他 -->
           <Other />
-          <!--TestOptions-->
-          <!--TestOptions /-->
         </n-scrollbar>
       </div>
     </div>
@@ -91,21 +88,17 @@ import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { storeToRefs } from "pinia";
 import { siteSettings, siteStatus, musicData } from "@/stores";
 import debounce from "@/utils/debounce";
-import packageJson from "@/../package.json";
 // 设置子项
 import General from "@/views/Setting/general.vue";
-import System from "@/views/Setting/system.vue";
 import Player from "@/views/Setting/player.vue";
 import Lyrics from "@/views/Setting/lyrics.vue";
 import Download from "@/views/Setting/download.vue";
 import Other from "@/views/Setting/other.vue";
-// import TestOptions from "@/views/Setting/testoptions.vue";
 
 const music = musicData();
 const status = siteStatus();
 const settings = siteSettings();
 const { showPlayBar } = storeToRefs(status);
-const { themeAutoCover } = storeToRefs(settings);
 
 // 响应式布局
 const isMobile = ref(false);
@@ -132,12 +125,10 @@ const showModal = ref(false);
 // 标签选项
 const tabOptions = computed(() => [
   { label: '常规', value: 'setTab1' },
-  { label: '系统', value: 'setTab2' },
-  { label: '播放', value: 'setTab3' },
-  { label: '歌词', value: 'setTab4' },
-  { label: '下载', value: 'setTab5' },
-  { label: '其他', value: 'setTab6' }
-  // { label: 'TestOptions', value: 'setTab7' }
+  { label: '播放', value: 'setTab2' },
+  { label: '歌词', value: 'setTab3' },
+  { label: '下载', value: 'setTab4' },
+  { label: '其他', value: 'setTab5' }
 ]);
 
 // 计算滚动区域高度
@@ -167,11 +158,7 @@ const allSetScroll = debounce((e) => {
   });
 }, 100);
 
-/* 跳转
-const jump = () => {
-  window.open(packageJson.github);
-};
-*/
+
 // 方法：显示弹窗
 const openModal = () => {
   showModal.value = true;
@@ -179,48 +166,46 @@ const openModal = () => {
 
 // 新增打开网页端设置方法
 const openWebSettings = () => {
+  const siteStatus = siteStatus();
   siteStatus.showFullPlayer = false;
   window.location.href = "/#/setting";
 };
 
 defineExpose({ showModal: openModal });
-import { watch } from 'vue';
-
-// 监听主题变化
-watch(() => settings.themeType, (newTheme) => {
-  const isDark = newTheme === 'dark';
-  document.documentElement.style.setProperty('--main-second-color', isDark ? '#1f1f1f' : '#f5f5f5');
-  // 更新其他相关样式变量
-}, { immediate: true });
 </script>
 
 <style lang="scss" scoped>
 .settings-modal {
   display: flex;
   flex-direction: column;
-  height: 70vh;
-  background-color: var(--divider-color);
+  height: calc(100vh - 100px);
+  background-color: transparent;
   transition: all 0.3s ease;
+  .n-base-selection {
+    border-radius: 8px;
+    background-color: transparent;
+  }
 
   .mobile-selector {
     flex-shrink: 0;
     padding: 16px 16px 8px;
-    background-color: var(--divider-color);
-    border-bottom: 1px solid var(--divider-color);
+    background-color: transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
     :deep(.n-select) {
       width: 100%;
       .n-base-selection {
         border-radius: 8px;
+        background-color: transparent;
       }
     }
   }
 
   .tabs-container {
     flex-shrink: 0;
-    border-bottom: 1px solid var(--divider-color);
-    background-color: var(--divider-color);
-    position: relative; /* 添加相对定位 */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: transparent;
+    position: relative;
 
     :deep(.n-tabs-nav) {
       padding: 0 20px;
@@ -235,7 +220,6 @@ watch(() => settings.themeType, (newTheme) => {
       font-weight: 600;
     }
     
-    /* 添加按钮样式 */
     .web-settings-btn {
       position: absolute;
       right: 16px;
@@ -255,24 +239,16 @@ watch(() => settings.themeType, (newTheme) => {
     flex: 1;
     overflow: hidden;
     padding: 16px 24px;
-    background-color: var(--divider-color);
+    background-color: transparent;
     transition: padding 0.3s ease;
 
     .n-scrollbar {
       padding-right: 12px;
-      background-color: var(--main-second-color);
+      background-color: rgba(255, 255, 255, 0.05);
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
   }
-}
-
-.modal-actions {
-  padding: 16px 24px;
-  border-top: 1px solid var(--divider-color);
-  text-align: center;
-  background-color: var(--main-second-color);
-  transition: all 0.3s ease;
 }
 
 /* 移动端样式 */
@@ -297,17 +273,6 @@ watch(() => settings.themeType, (newTheme) => {
           transform: scale(0.98);
         }
       }
-    }
-  }
-
-  .modal-actions {
-    padding: 16px;
-
-    :deep(.n-button) {
-      width: 100%;
-      height: 44px;
-      font-size: 16px;
-      border-radius: 8px;
     }
   }
 

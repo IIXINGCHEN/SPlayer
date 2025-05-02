@@ -55,3 +55,56 @@ const choosePath = async () => {
   if (selectedDir) downloadPath.value = selectedDir;
 };
 </script>
+<style lang="scss" scoped>
+.set-type {
+  .n-collapse {
+    background-color: transparent;
+    border: none;
+
+    :deep(.n-collapse-item) {
+      margin-bottom: 16px;
+      border: none;
+
+      .n-collapse-item__header {
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        background-color: transparent;
+      }
+
+      .n-collapse-item__content-wrapper {
+        border: none;
+      }
+
+      .n-collapse-item__content-inner {
+        padding: 8px 0;
+      }
+    }
+  }
+
+  .set-item {
+    margin-bottom: 12px;
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+
+    .name {
+      margin-bottom: 8px;
+      font-size: 14px;
+
+      .tip {
+        display: block;
+        margin-top: 4px;
+        font-size: 12px;
+        opacity: 0.6;
+      }
+    }
+
+    .set {
+      width: 100%;
+    }
+  }
+}
+</style>

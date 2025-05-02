@@ -1,19 +1,19 @@
-# 该项目已经完成了目前所有的使命, 现已转入维护模式直到我中考结束!
->[!IMPORTANT]
->
-> # Q&A
-> ### 你为什么要维护这个已经过时的版本
-> 那是因为在imsyy的dev分支将会向本地播放器发展, 且把在线版本进入基本维护模式而导致有些功能将不会在网页端生效, 该版本是最后一个支持移动端和网页部署的版本, 我将会尽量把功能与dev分支同步, 以便能使用到与dev分支相同的功能.
 # SPlayer
+> [!WARNING]
+> 近期我发现有部分用户在`.env`文件中填入了我的网易云API, 可能会有人不懂, `Vercel`是有**500GB**流量限制的
+> 这种现象导致了我的演示站点一直超出限制导致站点无法访问, 所以呼吁大家不要把我的API填入自己的`配置文件`内
+> 要是还发现有人在肆无忌惮的使用我的`API`, 我将会**封禁你的IP**并且把你的`网易云Cookie`**公开**到当前仓库中
 
 #### 一个简约的音乐播放器
 
 ![main](/screenshots/SPlayer.jpg)
 
 ## 说明
-
-> [!IMPORTANT]
+>[!IMPORTANT]
 >
+> # Q&A
+> ### 你为什么要维护这个已经过时的版本
+> 那是因为在imsyy的dev分支将会向本地播放器发展, 且把在线版本进入基本维护模式而导致有些功能将不会在网页端生效, 该版本是最后一个支持移动端和网页部署的版本, 我将会尽量把功能与dev分支同步, 以便能使用到与dev分支相同的功能.
 > ### 严肃警告
 >
 > - 请务必遵守 [GNU Affero General Public License (AGPL-3.0)](https://www.gnu.org/licenses/agpl-3.0.html) 许可协议
@@ -127,16 +127,21 @@
 2. 点击本仓库右上角的 `Fork`，复制本仓库到你的 `GitHub` 账号
 3. 复制 `/.env.example` 文件并重命名为 `/.env`
 4. 将 `.env` 文件中的 `RENDERER_VITE_SERVER_URL` 和 `VITE_UNM_API` 改为第一步得到的 API 地址
+> [!WARNING]
+> 
+> TMD`.env`文件已经明确表示不要用自带的`API`了, 我的`Vercel`的**500GB流量**就是被你们给耗光的
+> 下次再让我见到这种情况, 我就把你们的网易云cookie公开出来!
+>
 5. 将 `.env` 文件中的 `RENDERER_VITE_SITE_URL` 改为您的站点地址, 用于解决跨域问题
 
    ```dotenv
    RENDERER_VITE_SERVER_URL = "https://api.example.com";
-   VITE_UNM_API = "https://unm.example.com/"; # 注意要加 /
+   VITE_UNM_API = "https://unm.example.com";
    RENDERER_VITE_SITE_URL = "https://player.example.com";
    ```
 > [!IMPORTANT]
 >
-> 同时API也有另一只填入方式, 请在`vercel.json`里面
+> 同时API也有另一种填入方式, 请在`vercel.json`里面
 >
 >```json
 >

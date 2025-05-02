@@ -30,3 +30,5 @@ out
 *.njsproj
 *.sln
 *.sw?
+src-modern
+src-modern/*

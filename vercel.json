@@ -11,6 +11,14 @@
     {
       "source": "/api/unblock/:match*",
       "destination": "https://unm-server.focalors.ltd/:match*"
+    },
+    {
+      "source": "/api/ttml/:ttmlurl*",
+      "destination": "https://lyrics.focalors.ltd/:ttmlurl*"
+    },
+    {
+      "source": "/api/kuwo/songcdn/:kuwourl*",
+      "destination": "http://lx.sycdn.kuwo.cn/:kuwourl*"
     }
   ],
   "headers": [
@@ -28,48 +36,6 @@
         {
           "key": "Access-Control-Allow-Headers",
           "value": "*"  
-        },
-        {
-          "key": "Access-Control-Allow-Credentials",
-          "value": "true"
-        }
-      ]
-    },
-    {
-      "source": "/unblock/(.*)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Access-Control-Allow-Methods",
-          "value": "GET, POST, OPTIONS"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "*"
-        },
-        {
-          "key": "Access-Control-Allow-Credentials",
-          "value": "true"
-        }
-      ]
-    },
-    {
-      "source": "/ncmapi/(.*)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Access-Control-Allow-Methods",
-          "value": "GET, POST, OPTIONS"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "*"
         },
         {
           "key": "Access-Control-Allow-Credentials",

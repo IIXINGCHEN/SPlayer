@@ -15,6 +15,9 @@
         :enableBlur="lyricsBlur"
         :alignAnchor="'top'"
         :enableInterludeDots="true"
+        :linePosXSpringParams="settings.springParams.posX"
+        :linePosYSpringParams="settings.springParams.posY" 
+        :lineScaleSpringParams="settings.springParams.scale" 
         :style="{
           '--amll-lyric-view-color': mainColor,
           '--amll-lyric-player-font-size': isMobile ? '25px' : lyricsFontSize + 'px',
@@ -40,7 +43,7 @@ import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
 import { LyricPlayer } from '@applemusic-like-lyrics/vue';
 import { LyricLine } from '@applemusic-like-lyrics/core';
 import { musicData, siteSettings, siteStatus } from '@/stores';
-import { parseTTMLToAMLL } from '@/utils/processTTML.ts';
+import { parseTTMLToAMLL } from '@/utils/lyric.ts';
 import { setSeek, getSeek, fadePlayOrPause } from '@/utils/Player.js';
 import { storeToRefs } from 'pinia';
 import type { LyricClickEvent, LyricPlayerRef } from '@/types/amll.ts';
@@ -136,21 +139,39 @@ const isPureInstrumental = (lyrics: LyricLine[]): boolean => {
 
 // 获取当前歌词
 const currentLyrics = computed<LyricLine[]>(() => {
-  if (!playSongLyric.value) return [];
+  if (!playSongLyric.value) {
+    console.log('没有歌词数据');
+    return [];
+  }
   
   // 检查是否有TTML格式的歌词
   if (playSongLyric.value?.ttml) {
+    console.log('检测到TTML格式歌词');
     const ttmlLyrics = parseTTMLToAMLL(playSongLyric.value.ttml);
-    // 检查是否为纯音乐歌词
-    return isPureInstrumental(ttmlLyrics) ? [] : ttmlLyrics;
+    console.log('TTML歌词解析结果:', ttmlLyrics);
+    
+    if (isPureInstrumental(ttmlLyrics)) {
+      console.log('检测到纯音乐歌词，不显示歌词');
+      return [];
+    }
+    
+    console.log('使用TTML格式歌词，行数:', ttmlLyrics.length);
+    return ttmlLyrics;
   }
   
   // 使用歌词处理逻辑
   const isYrc = showYrc.value && playSongLyric.value.hasYrc && playSongLyric.value.yrc?.length > 0;
   const lyrics = isYrc ? playSongLyric.value.yrcAMData : playSongLyric.value.lrcAMData;
+  console.log('当前使用的歌词类型:', isYrc ? 'YRC' : 'LRC');
+  console.log('歌词数据:', lyrics);
   
-  // 检查是否为纯音乐歌词
-  return isPureInstrumental(lyrics) ? [] : lyrics;
+  if (isPureInstrumental(lyrics)) {
+    console.log('检测到纯音乐歌词，不显示歌词');
+    return [];
+  }
+  
+  console.log('歌词行数:', lyrics.length);
+  return lyrics;
 });
 
 // 监听播放状态变化
@@ -217,27 +238,26 @@ onBeforeUnmount(() => {
   :deep(.am-lyric) {
     width: 100%;
     height: 100%;
-    position: absolute;
+    position: relative;
     left: 0;
     top: 0;
-    padding-left: 10px;
-    padding-right: 80px;
-    margin-left: 0; /* 修复margin-left问题 */
+    padding: 20px;
+    margin: 0;
     z-index: 2;
-    display: block;
-    /* 确保LyricPlayer组件有一个有效的高度计算 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     min-height: 300px;
-    /* 防止高度计算为负值 */
     box-sizing: border-box;
-    /* 确保内容可见 */
     overflow: visible;
   }
   &.pure {
     text-align: center;
     :deep(.am-lyric) {
-      height: calc(100vh - 300px);
+      height: 100%;
       margin: 0;
-      padding: 0 80px;
+      padding: 20px;
       div {
         transform-origin: center !important;
       }

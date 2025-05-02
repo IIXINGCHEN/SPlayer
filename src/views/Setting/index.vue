@@ -144,10 +144,34 @@ const jump = () => {
   }
   :deep(.set-type) {
     padding-top: 30px;
+    .n-collapse {
+      background-color: transparent;
+      border: none;
+      :deep(.n-collapse-item) {
+        margin-bottom: 16px;
+        border: none;
+        .n-collapse-item__header {
+          font-size: 16px;
+          font-weight: bold;
+          border: none;
+          background-color: transparent;
+        }
+        .n-collapse-item__content-wrapper {
+          border: none;
+        }
+        .n-collapse-item__content-inner {
+          padding: 8px 0;
+        }
+      }
+    }
     .set-item {
       width: 100%;
       border-radius: 8px;
       margin-bottom: 12px;
+      background-color: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       &:last-child {
         margin-bottom: 0;
       }
@@ -158,7 +182,8 @@ const jump = () => {
         justify-content: space-between;
       }
       .name {
-        font-size: 16px;
+        margin-bottom: 8px;
+        font-size: 14px;
         display: flex;
         flex-direction: column;
         padding-right: 20px;
@@ -171,6 +196,8 @@ const jump = () => {
           }
         }
         .tip {
+          display: block;
+          margin-top: 4px;
           font-size: 12px;
           opacity: 0.8;
         }

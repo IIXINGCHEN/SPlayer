@@ -1,12 +1,13 @@
 import { Howl, Howler } from "howler";
 import { musicData, siteStatus, siteSettings } from "@/stores";
-import { getSongUrl, getSongLyric, songScrobble, getMusicNumUrl, getSongOtherUrl, getSongLyricLegacy } from "@/api/song";
+import { getSongUrl, getSongLyric, songScrobble, getMusicNumUrl, getSongLyricLegacy } from "@/api/song";
+import { getSongTTML } from "@/api/ttml";
 import { checkPlatform, getLocalCoverData, getBlobUrlFromUrl } from "@/utils/helper";
 import { decode as base642Buffer } from "@/utils/base64";
 import { getSongPlayTime } from "@/utils/timeTools";
 import { getCoverGradient } from "@/utils/cover-color";
 import { isLogin } from "@/utils/auth";
-import { parseLyricsData, parseLocalLyric } from "@/utils/lyric.ts";
+import { parseLyricsData, parseLocalLyric, parseTTMLToAMLL } from "@/utils/lyric.ts";
 import { parseLyric } from "@/utils/parseLyric";
 
 // 全局播放器
@@ -199,7 +200,7 @@ const getFromUnblockMusic = async (data, status, playNow) => {
       console.log(response);
       if (response?.code === 200 && response?.data) {
         if (response.data.proxyUrl) {
-          musicUrl = response.data.proxyUrl; 
+          musicUrl = response.data.url.replace(/^http:\/\/lx\.sycdn\.kuwo\.cn\//, "/api/kuwourl/songcdn/"); 
         } else {
           musicUrl = response.data.url;
         };
@@ -643,6 +644,7 @@ const getSongLyricData = async (islocal, data) => {
   try {
     const music = musicData();
     if (islocal) {
+      /* 不要再拿local误导人啦 */
       const lyricData = await electron.ipcRenderer.invoke("getMusicLyric", data?.path);
       if (lyricData) {
         // 使用parseLyric.js处理本地歌词
@@ -662,11 +664,36 @@ const getSongLyricData = async (islocal, data) => {
     } else {
       const lyricResponse = await getSongLyric(data?.id);
       const lyricLegacy = await getSongLyricLegacy(data?.id);
-      if (lyricResponse?.original || lyricLegacy) {
+      const lyricTTML = await getSongTTML(data?.id);
+      if (lyricResponse?.original || lyricLegacy || lyricTTML?.content) {
         // 使用parseLyric.js处理基础歌词
         const parsedLyric = parseLyric(lyricLegacy);
         // 使用lyric.ts处理AMLL格式
-        const amllLyric = parseLyricsData(lyricResponse.original);
+        let amllLyric = parseLyricsData(lyricResponse.original);
+        // 为了使用TTML歌词添加一个开关
+        const settings = siteSettings();
+        // 处理TTML歌词
+        if (lyricTTML?.content && settings.useTTMLFormat) {
+          try {
+            const ttmlLyric = parseTTMLToAMLL(lyricTTML.content);
+            if (ttmlLyric && ttmlLyric.length > 0) {
+              // 将TTML歌词转换为AMLL格式
+              amllLyric = {
+                lrcData: [],
+                yrcData: [],
+                lrcAMData: ttmlLyric,
+                yrcAMData: [],
+                hasLrcTran: ttmlLyric.some(line => line.translatedLyric),
+                hasLrcRoma: ttmlLyric.some(line => line.romanLyric),
+                hasYrc: false
+              };
+              console.info("TTML歌词解析成功", amllLyric);
+            }
+          } catch (error) {
+            console.error("TTML歌词解析失败:", error);
+          }
+        }
+        
         // 合并结果
         music.playSongLyric = {
           lrc: parsedLyric.lrc,
@@ -674,9 +701,9 @@ const getSongLyricData = async (islocal, data) => {
           lrcAMData: amllLyric.lrcAMData,
           yrcAMData: amllLyric.yrcAMData,
           // 保留原始歌词属性
-          hasLrcTran: parsedLyric.hasLrcTran,
-          hasLrcRoma: parsedLyric.hasLrcRoma,
-          hasYrc: parsedLyric.hasYrc,
+          hasLrcTran: amllLyric.hasLrcTran || parsedLyric.hasLrcTran,
+          hasLrcRoma: amllLyric.hasLrcRoma || parsedLyric.hasLrcRoma,
+          hasYrc: amllLyric.hasYrc || parsedLyric.hasYrc,
           hasYrcTran: parsedLyric.hasYrcTran,
           hasYrcRoma: parsedLyric.hasYrcRoma
         };

@@ -199,6 +199,7 @@ export const likePlaylist = (t, id) => {
   return axios({
     method: "GET",
     url: "/playlist/subscribe",
+    noCookie: true, // 由于新版本API收藏歌单时不能携带cookie,否则会导致请求不合法，所以这里不需要携带cookie
     params: {
       t,
       id,

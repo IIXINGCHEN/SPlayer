@@ -2,7 +2,7 @@
  * 歌词处理工具
  * 整合了原来的多个歌词处理文件的功能
  */
-import { LyricLine, parseLrc, parseYrc } from "@applemusic-like-lyrics/lyric";
+import { parseLrc, parseYrc, parseTTML, LyricLine } from "@applemusic-like-lyrics/lyric";
 import type { LyricLine as AMLLLyricLine } from '@/types/amll';
 import { siteSettings } from "@/stores";
 import { msToS } from "./time.ts";
@@ -266,84 +266,46 @@ export function parseTTMLToAMLL(ttmlContent: string): AMLLLyricLine[] {
   }
 
   try {
-    // 创建一个临时的DOM解析器来解析TTML内容
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(ttmlContent, 'text/xml');
+    // 使用AMLL核心库的parseTTML函数解析TTML内容
+    const parsedResult = parseTTML(ttmlContent);
     
-    // 检查解析是否成功
-    if (xmlDoc.getElementsByTagName('parsererror').length > 0) {
+    // 检查解析结果是否包含lines数组
+    if (!parsedResult || !parsedResult.lines || !Array.isArray(parsedResult.lines)) {
+      console.error('TTML解析结果格式无效', parsedResult);
       return [];
     }
-
-    // 获取所有的p标签（歌词行）
-    const pElements = xmlDoc.getElementsByTagName('p');
-    if (!pElements || pElements.length === 0) {
-      return [];
-    }
-
+    
     // 转换为AMLL格式的歌词行
-    const amllLines: AMLLLyricLine[] = [];
-    for (let i = 0; i < pElements.length; i++) {
-      const p = pElements[i];
-      const beginAttr = p.getAttribute('begin');
-      const endAttr = p.getAttribute('end');
-      
-      if (!beginAttr || !endAttr) {
-        continue;
+    return parsedResult.lines.map(line => {
+      // 确保line是一个有效对象
+      if (!line || typeof line !== 'object') {
+        console.warn('无效的歌词行数据:', line);
+        return null;
       }
 
-      // 解析时间（格式可能是 mm:ss.sss 或 hh:mm:ss.sss）
-      const startTime = parseTimeToMs(beginAttr);
-      const endTime = Math.max(startTime + 100, parseTimeToMs(endAttr)); // 确保结束时间大于开始时间
-      
-      if (isNaN(startTime) || isNaN(endTime)) {
-        continue;
-      }
+      // 处理words数组
+      const words = Array.isArray(line.words) ? line.words.map(word => ({
+        word: word?.word?.trim() || '',
+        startTime: typeof word?.startTime === 'number' ? word.startTime : 0,
+        endTime: typeof word?.endTime === 'number' ? word.endTime : 0
+      })) : [];
 
-      // 获取主要歌词内容和翻译/音译内容
-      let mainContent = p.textContent?.trim() || '';
-      let translatedLyric = '';
-      let romanLyric = '';
-      
-      // 查找翻译和音译标签
-      const translationSpan = p.querySelector('.translation');
-      const romajiSpan = p.querySelector('.romaji');
-      
-      if (translationSpan) {
-        translatedLyric = translationSpan.textContent?.trim() || '';
-        // 从主内容中移除翻译部分
-        mainContent = mainContent.replace(translatedLyric, '').trim();
-      }
-      
-      if (romajiSpan) {
-        romanLyric = romajiSpan.textContent?.trim() || '';
-        // 从主内容中移除音译部分
-        mainContent = mainContent.replace(romanLyric, '').trim();
-      }
+      // 计算开始和结束时间
+      const startTime = words[0]?.startTime ?? 0;
+      const endTime = words[words.length - 1]?.endTime ?? (startTime + 5000);
 
-      // 创建AMLL格式的歌词行
-      const amllLine: AMLLLyricLine = {
+      return {
+        words,
         startTime,
         endTime,
-        words: [{
-          word: mainContent || '♪',
-          startTime,
-          endTime
-        }],
-        translatedLyric,
-        romanLyric,
-        isBG: false,
-        isDuet: false
+        translatedLyric: typeof line.translatedLyric === 'string' ? line.translatedLyric : '',
+        romanLyric: typeof line.romanLyric === 'string' ? line.romanLyric : '',
+        isBG: typeof line.isBG === 'boolean' ? line.isBG : false,
+        isDuet: typeof line.isDuet === 'boolean' ? line.isDuet : false
       };
-
-      amllLines.push(amllLine);
-    }
-
-    // 确保歌词行按时间排序
-    amllLines.sort((a, b) => a.startTime - b.startTime);
-
-    return amllLines;
+    }).filter(line => line !== null) as AMLLLyricLine[]
   } catch (error) {
+    console.error('解析TTML时发生错误：', error);
     return [];
   }
 }

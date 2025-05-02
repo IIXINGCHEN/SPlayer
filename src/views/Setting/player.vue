@@ -40,120 +40,123 @@
       <n-switch v-model:value="playSearch" :round="false" />
     </n-card>
     <n-card class="set-item">
-      <div class="name">
-        在线播放音质
-        <n-text class="tip">
-          {{ songLevelData[songLevel].tip }}
-        </n-text>
-      </div>
-      <n-select v-model:value="songLevel" :options="Object.values(songLevelData)" class="set" />
-    </n-card>
-    <n-card class="set-item">
-      <div class="name">
-        底栏歌词显示
-        <n-text class="tip">是否在播放时将歌手信息更改为歌词</n-text>
-      </div>
-      <n-switch v-model:value="bottomLyricShow" :round="false" />
-    </n-card>
-    <n-card class="set-item">
       <div class="name">显示播放列表歌曲数量</div>
       <n-switch v-model:value="showPlaylistCount" :round="false" />
     </n-card>
     <n-card class="set-item">
       <div class="name">
-        播放器样式
-        <n-text class="tip"> 播放器左侧区域样式 </n-text>
-      </div>
-      <n-select
-        v-model:value="playCoverType"
-        :options="[
-          {
-            label: '封面模式',
-            value: 'cover',
-          },
-          {
-            label: '唱片模式',
-            value: 'record',
-          },
-        ]"
-        class="set"
-      />
-    </n-card>
-    <n-card class="set-item">
-      <div class="name">
-        播放背景样式
-        <n-text class="tip">
-          {{
-            playerBackgroundType === "animation"
-              ? "流体效果，较消耗性能，请谨慎开启"
-              : playerBackgroundType === "blur"
-                ? "将封面模糊处理为背景"
-                : "提取封面主色为渐变色"
-          }}
-        </n-text>
-      </div>
-      <n-select
-        v-model:value="playerBackgroundType"
-        :options="[
-          {
-            label: '流体效果',
-            value: 'animation',
-          },
-          {
-            label: '封面模糊',
-            value: 'blur',
-          },
-          {
-            label: '主色渐变',
-            value: 'gradient',
-          },
-          {
-            label: '无背景',
-            value: 'none',
-          },
-        ]"
-        class="set"
-      />
-    </n-card>
-    <n-card class="set-item">
-      <div class="name">
-        显示前奏倒计时
-        <n-text class="tip">部分歌曲前奏可能存在显示错误</n-text>
-      </div>
-      <n-switch v-model:value="countDownShow" :round="false" />
-    </n-card>
-    <n-card class="set-item">
-      <div class="name">
         尝试替换无法播放的歌曲
         <n-text class="tip">
-          {{ !checkPlatform.electron() ? "替换无法播放的歌曲链接, 如VIP和受限歌曲等; 注意:可能会造成音乐与原曲不符" : "客户端独占功能" }}
+          替换无法播放的歌曲链接, 如VIP和受限歌曲等
         </n-text>
       </div>
       <n-switch v-model:value="useUnmServer" :disabled="checkPlatform.electron()" :round="false" />
     </n-card>
     <n-card class="set-item">
-      <div class="name">
-        <div class="dev">
-          显示音乐频谱
-          <n-tag :bordered="false" round size="small" type="warning">
-            开发中
-            <template #icon>
-              <n-icon>
-                <SvgIcon icon="code" />
-              </n-icon>
-            </template>
-          </n-tag>
-        </div>
-        <n-text class="tip">
-          {{
-            showSpectrums
-              ? "开启音乐频谱会极大影响性能，如遇问题请关闭"
-              : "是否在播放器底部显示音乐频谱"
-          }}
-        </n-text>
+      <div class="name">显示前奏倒计时
+        <n-text class="tip">部分歌曲前奏可能存在显示错误</n-text>
       </div>
-      <n-switch v-model:value="showSpectrums" :round="false" />
+      <n-switch v-model:value="countDownShow" :round="false" />
     </n-card>
+    <n-card class="set-item">
+      <div class="name">底栏歌词显示
+        <n-text class="tip">是否在播放时将歌手信息更改为歌词</n-text>
+      </div>
+      <n-switch v-model:value="bottomLyricShow" :round="false" />
+    </n-card>
+
+    <n-collapse>
+      <n-collapse-item title="外观设置">
+        <n-card class="set-item">
+          <div class="name">
+            在线播放音质
+            <n-text class="tip">
+              {{ songLevelData[songLevel].tip }}
+            </n-text>
+          </div>
+          <n-select v-model:value="songLevel" :options="Object.values(songLevelData)" class="set" />
+        </n-card>
+        <n-card class="set-item">
+          <div class="name">
+            播放器样式
+            <n-text class="tip"> 播放器左侧区域样式 </n-text>
+          </div>
+          <n-select
+            v-model:value="playCoverType"
+            :options="[
+              {
+                label: '封面模式',
+                value: 'cover',
+              },
+              {
+                label: '唱片模式',
+                value: 'record',
+              },
+            ]"
+            class="set"
+          />
+        </n-card>
+        <n-card class="set-item">
+          <div class="name">
+            播放背景样式
+            <n-text class="tip">
+              {{
+                playerBackgroundType === "animation"
+                  ? "流体效果，较消耗性能，请谨慎开启"
+                  : playerBackgroundType === "blur"
+                    ? "将封面模糊处理为背景"
+                    : "提取封面主色为渐变色"
+              }}
+            </n-text>
+          </div>
+          <n-select
+            v-model:value="playerBackgroundType"
+            :options="[
+              {
+                label: '流体效果',
+                value: 'animation',
+              },
+              {
+                label: '封面模糊',
+                value: 'blur',
+              },
+              {
+                label: '主色渐变',
+                value: 'gradient',
+              },
+              {
+                label: '无背景',
+                value: 'none',
+              },
+            ]"
+            class="set"
+          />
+        </n-card>
+        <n-card class="set-item">
+          <div class="name">
+            <div class="dev">
+              显示音乐频谱
+              <n-tag :bordered="false" round size="small" type="warning">
+                开发中
+                <template #icon>
+                  <n-icon>
+                    <SvgIcon icon="code" />
+                  </n-icon>
+                </template>
+              </n-tag>
+            </div>
+            <n-text class="tip">
+              {{
+                showSpectrums
+                  ? "开启音乐频谱会极大影响性能，如遇问题请关闭"
+                  : "是否在播放器底部显示音乐频谱"
+              }}
+            </n-text>
+          </div>
+          <n-switch v-model:value="showSpectrums" :round="false" />
+        </n-card>
+      </n-collapse-item>
+    </n-collapse>
   </div>
 </template>
 
@@ -218,3 +221,57 @@ const songLevelData = {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.set-type {
+  .n-collapse {
+    background-color: transparent;
+    border: none;
+
+    :deep(.n-collapse-item) {
+      margin-bottom: 16px;
+      border: none;
+
+      .n-collapse-item__header {
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        background-color: transparent;
+      }
+
+      .n-collapse-item__content-wrapper {
+        border: none;
+      }
+
+      .n-collapse-item__content-inner {
+        padding: 8px 0;
+      }
+    }
+  }
+
+  .set-item {
+    margin-bottom: 12px;
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+
+    .name {
+      margin-bottom: 8px;
+      font-size: 14px;
+
+      .tip {
+        display: block;
+        margin-top: 4px;
+        font-size: 12px;
+        opacity: 0.6;
+      }
+    }
+
+    .set {
+      width: 100%;
+    }
+  }
+}
+</style>

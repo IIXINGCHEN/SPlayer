@@ -45,7 +45,7 @@ const useSiteSettingsStore = defineStore("siteSettings", {
       // 歌词部分
       lrcMousePause: false, // 鼠标移入歌词区域暂停滚动
       lyricsFontSize: 46, // 歌词大小
-      lyricsFont: "HarmonyOS Sans", // 歌词字体
+      lyricsFont: "LXGW WenKai", // 歌词字体
       lyricsBlur: true, // 歌词模糊
       lyricsBold: true, // 歌词加粗
       showYrc: true, // 是否显示逐字歌词
@@ -55,8 +55,27 @@ const useSiteSettingsStore = defineStore("siteSettings", {
       alignAnchor: "top", // 歌词对齐位置
       showTransl: true, // 是否显示歌词翻译
       showRoma: true, // 是否显示歌词音译
-      useAMLyrics: false, // 是否使用苹果音乐歌词
-      useAMSpring: false, // 是否使用苹果音乐歌词弹簧动画
+      useAMLyrics: false, // 使用苹果音乐歌词
+      useAMSpring: false, // 使用苹果音乐歌词弹簧动画
+      /* AMLL歌词参数设置 */
+      useTTMLFormat: false, // 使用TTML格式歌词
+      springParams: { // 弹簧参数
+        posX: {
+          mass: 1,
+          damping: 10,
+          stiffness: 100
+        },
+        posY: {
+          mass: 1,
+          damping: 15,
+          stiffness: 100
+        },
+        scale: {
+          mass: 1,
+          damping: 20,
+          stiffness: 100
+        }
+      },
       // 下载部分
       downloadPath: null, // 默认下载路径
       downloadMeta: true, // 同时下载元信息

@@ -1,63 +1,52 @@
-<!-- 播放器 - 音乐频谱 -->
 <template>
-  <div :style="{ opacity: show ? '0.6' : '0.1' }" class="spectrum">
+  <div :style="{ opacity: show ? '0.6' : '0.1' }" class="player-spectrum">
     <canvas ref="canvasRef" :style="{ height: height + 'px' }" class="spectrum-line" />
   </div>
 </template>
 
-<script setup>
-import { storeToRefs } from "pinia";
+<script setup lang="ts">
+import { useRafFn } from '@vueuse/core';
+import { ref } from "vue";
 import { siteStatus } from "@/stores";
 
-const props = defineProps({
-  show: {
-    type: Boolean,
-    default: true,
-  },
-  height: {
-    type: Number,
-    default: 80,
-  },
-  barWidth: {
-    type: Number,
-    default: 4,
-  },
-  radius: {
-    type: Number,
-    default: 2.5,
-  },
-});
-const status = siteStatus();
-const { spectrumsData } = storeToRefs(status);
+const props = defineProps<{
+  show: boolean;
+  height?: number;
+  radius?: number;
+  color?: string;
+}>();
+
+const statusStore = siteStatus();
 
 // canvas
-const canvasRef = ref(null);
-const isKeepDrawing = ref(true);
+const canvasRef = ref<HTMLCanvasElement | null>(null);
+const isKeepDrawing = ref<boolean>(true);
 
 /**
  * 绘制音乐频谱图
  * @param {Array} data - 包含音频频谱数据的数组
  */
-const drawSpectrum = (data) => {
+const drawSpectrum = (data: number[]) => {
   if (!data) return;
-  if (!isKeepDrawing.value) return;
-  // 去除频谱前5项
-  data = data.slice(5);
+  if (!isKeepDrawing.value || !canvasRef.value) return;
+  // 去除频谱前 10 项
+  data = data.slice(10);
   // 设置画布宽度，最大为 1600
   canvasRef.value.width = document.body.clientWidth >= 1600 ? 1600 : document.body.clientWidth;
   // 设置画布高度
-  canvasRef.value.height = props.height;
+  canvasRef.value.height = props.height || 80;
   // 获取2D上下文
-  const ctx = canvasRef.value.getContext("2d");
+  const ctx: CanvasRenderingContext2D | null = canvasRef.value.getContext("2d");
   // 画布宽高
   const canvasWidth = canvasRef.value.width;
   const canvasHeight = canvasRef.value.height;
   // 频谱数量
-  const numBars = spectrumsData.value.length / 2.5;
+  const numBars = statusStore.spectrumsData.length / 2.5;
   // 圆角半径
-  const cornerRadius = props.radius;
+  const cornerRadius = props.radius || 2.5;
   // 柱形宽度
   const barWidth = canvasWidth / numBars / 2;
+  if (!ctx) return;
   // 清除画布
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
   // 遍历音频频谱数据
@@ -69,7 +58,7 @@ const drawSpectrum = (data) => {
     const x2 = canvasWidth / 2 - (i + 1) * barWidth;
     const y = canvasHeight - barHeight;
     // 设置柱形颜色，如果未设置则使用默认颜色
-    ctx.fillStyle = `rgb(${status.coverTheme?.light?.shadeTwo})` || "#efefef";
+    ctx.fillStyle = props.color || "#efefef";
     // 检查柱形高度是否大于0，避免绘制高度为0的柱形
     if (barHeight > 0) {
       // 调用绘制圆角矩形的函数
@@ -77,10 +66,6 @@ const drawSpectrum = (data) => {
       roundRect(ctx, x2, y, barWidth - 3, barHeight, cornerRadius);
     }
   }
-  // 请求下一帧
-  requestAnimationFrame(() => {
-    drawSpectrum(spectrumsData.value);
-  });
 };
 
 /**
@@ -92,7 +77,14 @@ const drawSpectrum = (data) => {
  * @param {number} height - 矩形高度
  * @param {number} radius - 圆角半径
  */
-const roundRect = (ctx, x, y, width, height, radius) => {
+const roundRect = (
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  radius: number,
+) => {
   ctx.beginPath();
   ctx.moveTo(x + radius, y);
   ctx.lineTo(x + width - radius, y);
@@ -107,17 +99,22 @@ const roundRect = (ctx, x, y, width, height, radius) => {
   ctx.fill();
 };
 
+// 开始绘制频谱
+const { pause: pauseDraw, resume: resumeDraw } = useRafFn(() => {
+  drawSpectrum(statusStore.spectrumsData);
+});
+
 onMounted(() => {
-  drawSpectrum(spectrumsData.value);
+  resumeDraw();
 });
 
 onBeforeUnmount(() => {
-  isKeepDrawing.value = false;
+  pauseDraw();
 });
 </script>
 
 <style lang="scss" scoped>
-.spectrum {
+.player-spectrum {
   position: fixed;
   left: 0;
   bottom: 0;

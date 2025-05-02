@@ -751,10 +751,11 @@ onUnmounted(() => {
       }
       &.pure {
         width: 100%;
-        height: calc(100vh - 210px);
+        height: calc(100vh - 120px);
         display: flex;
         flex-direction: column;
         align-items: center;
+        margin-bottom: 70px;
         .data {
           padding: 0 80px;
           display: flex;
