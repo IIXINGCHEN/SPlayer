@@ -284,24 +284,52 @@ export function parseTTMLToAMLL(ttmlContent: string): AMLLLyricLine[] {
       }
 
       // 处理words数组
-      const words = Array.isArray(line.words) ? line.words.map(word => ({
-        word: word?.word?.trim() || '',
-        startTime: typeof word?.startTime === 'number' ? word.startTime : 0,
-        endTime: typeof word?.endTime === 'number' ? word.endTime : 0
-      })) : [];
+      const words = Array.isArray(line.words) ? line.words.map((word, index, arr) => {
+        const startTime = typeof word?.startTime === 'number' ? word.startTime : 0;
+        const endTime = typeof word?.endTime === 'number' ? 
+          Math.max(word.endTime, startTime + 100) : // 确保每个词至少持续100ms
+          startTime + 100;
+
+        // 处理单词间的空格
+        let processedWord = word?.word?.trim() || '♪';
+        const nextWord = arr[index + 1]?.word?.trim();
+
+        // 检查当前词和下一个词是否都是英文
+        const isCurrentEnglish = /[a-zA-Z]/.test(processedWord);
+        const isNextEnglish = nextWord && /[a-zA-Z]/.test(nextWord);
+
+        // 如果当前词和下一个词都是英文，且当前词末尾没有空格，则添加空格
+        if (isCurrentEnglish && isNextEnglish && !processedWord.endsWith(' ')) {
+          processedWord += ' ';
+        }
+
+        return {
+          word: processedWord,
+          startTime,
+          endTime
+        };
+      }) : [];
 
       // 计算开始和结束时间
       const startTime = words[0]?.startTime ?? 0;
       const endTime = words[words.length - 1]?.endTime ?? (startTime + 5000);
 
+      // 确保每行歌词至少持续500ms
+      const minDuration = 500;
+      const adjustedEndTime = Math.max(endTime, startTime + minDuration);
+
+      // 获取ttm:agent属性以确定是否为背景音或对唱
+      const isBG = line.isBG || false;
+      const isDuet = line.isDuet || (line.agent === 'v2');
+
       return {
         words,
         startTime,
-        endTime,
+        endTime: adjustedEndTime,
         translatedLyric: typeof line.translatedLyric === 'string' ? line.translatedLyric : '',
         romanLyric: typeof line.romanLyric === 'string' ? line.romanLyric : '',
-        isBG: typeof line.isBG === 'boolean' ? line.isBG : false,
-        isDuet: typeof line.isDuet === 'boolean' ? line.isDuet : false
+        isBG,
+        isDuet
       };
     }).filter(line => line !== null) as AMLLLyricLine[]
   } catch (error) {

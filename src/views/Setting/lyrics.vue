@@ -250,6 +250,7 @@ const {
   useAMSpring,
   lyricsFont,
   springParams,
+  useTTMLFormat,
 } = storeToRefs(settings);
 
 // 更新全局歌词字体

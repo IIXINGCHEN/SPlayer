@@ -677,15 +677,15 @@ const getSongLyricData = async (islocal, data) => {
           try {
             const ttmlLyric = parseTTMLToAMLL(lyricTTML.content);
             if (ttmlLyric && ttmlLyric.length > 0) {
-              // 将TTML歌词转换为AMLL格式
+              // 将TTML歌词转换为AMLL格式，由于TTML包含逐字信息，应该存储在yrcAMData中
               amllLyric = {
                 lrcData: [],
                 yrcData: [],
-                lrcAMData: ttmlLyric,
-                yrcAMData: [],
+                lrcAMData: [],
+                yrcAMData: ttmlLyric,
                 hasLrcTran: ttmlLyric.some(line => line.translatedLyric),
                 hasLrcRoma: ttmlLyric.some(line => line.romanLyric),
-                hasYrc: false
+                hasYrc: true
               };
               console.info("TTML歌词解析成功", amllLyric);
             }

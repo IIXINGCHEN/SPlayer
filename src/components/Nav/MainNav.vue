@@ -67,7 +67,7 @@
     </div>
     <div class="right">
       <!-- 全局菜单 -->
-      <n-button
+      <!--n-button
         :focusable="false"
         class="settings"
         circle
@@ -79,7 +79,7 @@
             <SvgIcon icon="round-settings" />
           </n-icon>
         </template>
-      </n-button>
+      </n-button-->
       <n-dropdown
         :show="mainMenuShow"
         :show-arrow="true"

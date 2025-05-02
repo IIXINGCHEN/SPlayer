@@ -10,6 +10,16 @@
     class="download-song"
     preset="card"
     title="歌曲下载"
+    :style="{
+      width: isMobile ? '100vw' : '800px',
+      maxWidth: '90vw',
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      backdropFilter: 'blur(10px)',
+      WebkitBackdropFilter: 'blur(10px)',
+      borderRadius: isMobile ? '16px 16px 0 0' : '8px',
+      margin: isMobile ? 'auto auto 0 auto' : 'auto',
+      marginBottom: isMobile ? '100px' : '0px'
+    }"
   >
     <Transition name="fade" mode="out-in">
       <div v-if="songData">
@@ -77,6 +87,7 @@
 </template>
 
 <script setup>
+import { ref, onMounted, onUnmounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { siteData, siteSettings } from "@/stores";
@@ -89,6 +100,23 @@ const router = useRouter();
 const data = siteData();
 const settings = siteSettings();
 const { userData } = storeToRefs(data);
+
+// 响应式布局
+const isMobile = ref(false);
+const checkMobile = () => {
+  isMobile.value = window.innerWidth <= 768;
+};
+
+// 监听窗口大小变化
+onMounted(() => {
+  checkMobile();
+  window.addEventListener('resize', checkMobile);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkMobile);
+});
+
 const {
   downloadPath,
   downloadMeta,
@@ -218,6 +246,67 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
+.download-song {
+  :deep(.n-card) {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+      transform: translateY(-2px);
+    }
+  }
+
+  .song-info {
+    margin-bottom: 16px;
+    padding: 0 8px;
+
+    .name {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: var(--n-text-color);
+    }
+
+    .artist {
+      font-size: 14px;
+      opacity: 0.8;
+      color: var(--n-text-color-3);
+    }
+  }
+
+  :deep(.n-button) {
+    border-radius: 8px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .set-item {
+      margin-bottom: 12px;
+    }
+
+    :deep(.n-card) {
+      border-radius: 12px;
+
+      &:active {
+        transform: scale(0.98);
+      }
+    }
+
+    :deep(.n-switch) {
+      height: 24px;
+      min-width: 44px;
+    }
+  }
+}
+
 /* 新增音质选择样式 ✅ */
 .set-item {
   .n-select {
