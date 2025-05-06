@@ -17,8 +17,8 @@
       backdropFilter: 'blur(10px)',
       WebkitBackdropFilter: 'blur(10px)',
       borderRadius: isMobile ? '16px 16px 0 0' : '8px',
-      margin: isMobile ? 'auto auto 0 auto' : 'auto',
-      marginBottom: isMobile ? '100px' : '0px'
+      margin: isMobile ? 'auto' : 'auto',
+      marginBottom: '100px'
     }"
   >
     <Transition name="fade" mode="out-in">

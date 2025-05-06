@@ -1,6 +1,7 @@
 <!-- 搜索 - 视频 -->
 <template>
   <div class="search-videos">
+  <PageTransition>
     <Transition name="fade" mode="out-in">
       <div v-if="searchData !== 'empty'" class="list">
         <!-- 列表 -->
@@ -26,10 +27,12 @@
         </template>
       </n-empty>
     </Transition>
-  </div>
+    </PageTransition>
+</div>
 </template>
 
-<script setup>
+<script setup>import PageTransition from "@/components/Global/PageTransition.vue";
+
 import { getSearchRes } from "@/api/search";
 import { useRouter } from "vue-router";
 import { siteSettings } from "@/stores";

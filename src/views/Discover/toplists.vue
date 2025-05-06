@@ -1,6 +1,7 @@
 <!-- 发现 - 排行榜 -->
 <template>
   <div class="dsc-toplists">
+  <PageTransition>
     <div class="official">
       <n-divider> 官方榜 </n-divider>
       <SpecialCover
@@ -15,10 +16,12 @@
       <n-divider> 全球榜 </n-divider>
       <MainCover :data="toplistData.globalList" />
     </div>
-  </div>
+    </PageTransition>
+</div>
 </template>
 
-<script setup>
+<script setup>import PageTransition from "@/components/Global/PageTransition.vue";
+
 import { getTopPlaylist } from "@/api/playlist";
 import formatData from "@/utils/formatData";
 

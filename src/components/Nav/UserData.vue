@@ -162,7 +162,8 @@ const userMenuSelect = (key) => {
   switch (key) {
     // 明暗切换
     case "darkOrlight":
-      settings.setThemeType(themeType.value === "light" ? "dark" : "light");
+      // settings.setThemeType(themeType.value === "light" ? "dark" : "light");
+      $message.error("此功能已被禁用!");
       break;
     // 登录登出
     case "logoutOrlogin":

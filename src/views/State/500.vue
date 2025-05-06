@@ -6,7 +6,8 @@
   </n-result>
 </template>
 
-<script setup>
+<script setup>import PageTransition from "@/components/Global/PageTransition.vue";
+
 import { useRouter } from "vue-router";
 
 const router = useRouter();

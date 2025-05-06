@@ -1,6 +1,7 @@
 <!-- 搜索 -->
 <template>
   <div class="search">
+  <PageTransition>
     <template v-if="searchKeywords">
       <div class="title">
         <n-text class="key">{{ searchKeywords }}</n-text>
@@ -30,10 +31,12 @@
       </div>
       <n-button class="back" strong secondary @click="router.go(-1)"> 返回上一页 </n-button>
     </template>
-  </div>
+    </PageTransition>
+</div>
 </template>
 
-<script setup>
+<script setup>import PageTransition from "@/components/Global/PageTransition.vue";
+
 import { useRouter } from "vue-router";
 
 const router = useRouter();

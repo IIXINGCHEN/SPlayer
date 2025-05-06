@@ -113,7 +113,7 @@
           </div>
           <n-text class="tip">是否在具有逐字歌词时显示</n-text>
         </div>
-        <n-switch v-model:value="showYrc" :round="false" />
+        <n-switch v-model:value="showYrc" :disabled="useTTMLFormat" :round="false" />
       </n-card>
       <n-card class="set-item">
         <div class="name">
@@ -173,7 +173,7 @@
                 开启本项后，歌词将使用TTML格式歌词, 会从SteveXMH的歌词仓库获取TTML歌词, 如果没有TTML歌词则回退使用LRC歌词
               </n-text>
             </div>
-            <n-switch v-model:value="useTTMLFormat" :round="false" />
+            <n-switch v-model:value="useTTMLFormat" :disabled="!useAMLyrics" :round="false" />
           </n-collapse-item>
         </n-collapse>
         <n-card class="set-item">
@@ -232,10 +232,12 @@
 
 <script setup>
 import { storeToRefs } from "pinia";
+import { watch } from "vue";
 import { siteSettings } from "@/stores";
 
 const settings = siteSettings();
 const {
+  alignAnchor,
   showYrc,
   showYrcAnimation,
   showTransl,
@@ -252,6 +254,19 @@ const {
   springParams,
   useTTMLFormat,
 } = storeToRefs(settings);
+
+// 监听TTML格式开关状态
+watch(useTTMLFormat, (newVal) => {
+  if (newVal) {
+    showYrc.value = true;
+  }
+});
+
+watch(useAMLyrics, (newVal) => {
+  if (newVal === false) {
+    useTTMLFormat.value = false;
+  }
+});
 
 // 更新全局歌词字体
 const updateLyricsFont = () => {

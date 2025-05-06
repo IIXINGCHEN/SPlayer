@@ -1,5 +1,6 @@
 <template>
   <div class="like-playlists">
+  <PageTransition>
     <Transition name="fade" mode="out-in">
       <div v-if="userLikeData.playlists?.length" class="pl-list">
         <!-- 分类 -->
@@ -41,10 +42,12 @@
         size="large"
       />
     </Transition>
-  </div>
+    </PageTransition>
+</div>
 </template>
 
-<script setup>
+<script setup>import PageTransition from "@/components/Global/PageTransition.vue";
+
 import { storeToRefs } from "pinia";
 import { siteData } from "@/stores";
 import { useRouter } from "vue-router";

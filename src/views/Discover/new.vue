@@ -1,6 +1,7 @@
 <!-- 发现 - 最新音乐 -->
 <template>
   <div class="dsc-new">
+  <PageTransition>
     <n-flex class="menu" justify="space-between">
       <n-flex class="type">
         <n-tag
@@ -44,10 +45,12 @@
         <SongList :data="newSongData" />
       </div>
     </Transition>
-  </div>
+    </PageTransition>
+</div>
 </template>
 
-<script setup>
+<script setup>import PageTransition from "@/components/Global/PageTransition.vue";
+
 import { useRouter } from "vue-router";
 import { siteSettings } from "@/stores";
 import { getNewSong, getAllNewAlbum } from "@/api/recommend";

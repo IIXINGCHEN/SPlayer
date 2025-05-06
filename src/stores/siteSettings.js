@@ -44,7 +44,7 @@ const useSiteSettingsStore = defineStore("siteSettings", {
       loadSize: 50, // 每页加载数量
       // 歌词部分
       lrcMousePause: false, // 鼠标移入歌词区域暂停滚动
-      lyricsFontSize: 46, // 歌词大小
+      lyricsFontSize: 36, // 歌词大小
       lyricsFont: "LXGW WenKai", // 歌词字体
       lyricsBlur: true, // 歌词模糊
       lyricsBold: true, // 歌词加粗

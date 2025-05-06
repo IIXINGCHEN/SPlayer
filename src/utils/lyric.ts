@@ -291,7 +291,7 @@ export function parseTTMLToAMLL(ttmlContent: string): AMLLLyricLine[] {
           startTime + 100;
 
         // 处理单词间的空格
-        let processedWord = word?.word?.trim() || '♪';
+        let processedWord = word?.word?.trim() || ' ';
         const nextWord = arr[index + 1]?.word?.trim();
 
         // 检查当前词和下一个词是否都是英文

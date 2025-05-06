@@ -1,6 +1,7 @@
 <!-- 播客 - 分类 -->
 <template>
   <div class="dj-type">
+  <PageTransition>
     <div class="type-title">
       <n-button class="back" secondary strong round @click="router.push('/dj-hot')">
         <template #icon>
@@ -22,10 +23,12 @@
         <MainCover :data="djRecData" type="dj" />
       </n-tab-pane>
     </n-tabs>
-  </div>
+    </PageTransition>
+</div>
 </template>
 
-<script setup>
+<script setup>import PageTransition from "@/components/Global/PageTransition.vue";
+
 import { useRouter } from "vue-router";
 import { getRadioHot, getRecType } from "@/api/dj";
 import formatData from "@/utils/formatData";

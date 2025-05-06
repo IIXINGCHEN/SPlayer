@@ -1,15 +1,6 @@
 import { checkPlatform } from "@/utils/helper";
 
 const routes = [
-  // 歌曲详情
-  {
-    path: "/song",
-    name: "song-detail",
-    meta: {
-      title: "歌曲详情",
-    },
-    component: () => import("@/views/SongDetail.vue"),
-  },
   // 首页
   {
     path: "/",

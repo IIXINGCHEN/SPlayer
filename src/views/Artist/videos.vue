@@ -1,5 +1,6 @@
 <template>
   <div class="artist-videos">
+  <PageTransition>
     <Transition name="fade" mode="out-in">
       <div v-if="artistVideos !== 'empty'" class="list">
         <!-- 列表 -->
@@ -20,10 +21,12 @@
         size="large"
       />
     </Transition>
-  </div>
+    </PageTransition>
+</div>
 </template>
 
-<script setup>
+<script setup>import PageTransition from "@/components/Global/PageTransition.vue";
+
 import { useRouter } from "vue-router";
 import { siteSettings } from "@/stores";
 import { getArtistVideos } from "@/api/artist";

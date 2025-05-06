@@ -5,8 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { useRafFn } from '@vueuse/core';
-import { ref } from "vue";
+import { ref, onMounted, onBeforeUnmount, computed, watchEffect } from "vue";
 import { siteStatus } from "@/stores";
 
 const props = defineProps<{
@@ -26,6 +25,10 @@ const isKeepDrawing = ref<boolean>(true);
  * 绘制音乐频谱图
  * @param {Array} data - 包含音频频谱数据的数组
  */
+// 动画帧ID
+let animationFrameId: number | null = null;
+
+// 绘制频谱的核心函数
 const drawSpectrum = (data: number[]) => {
   if (!data) return;
   if (!isKeepDrawing.value || !canvasRef.value) return;
@@ -99,17 +102,42 @@ const roundRect = (
   ctx.fill();
 };
 
-// 开始绘制频谱
-const { pause: pauseDraw, resume: resumeDraw } = useRafFn(() => {
+// 动画循环函数
+const animate = () => {
   drawSpectrum(statusStore.spectrumsData);
+  animationFrameId = requestAnimationFrame(animate);
+};
+
+// 开始动画
+const startAnimation = () => {
+  if (!animationFrameId) {
+    animate();
+  }
+};
+
+// 停止动画
+const stopAnimation = () => {
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId);
+    animationFrameId = null;
+  }
+};
+
+// 监听频谱数据变化
+watchEffect(() => {
+  if (statusStore.spectrumsData && statusStore.spectrumsData.length > 0) {
+    startAnimation();
+  } else {
+    stopAnimation();
+  }
 });
 
 onMounted(() => {
-  resumeDraw();
+  startAnimation();
 });
 
 onBeforeUnmount(() => {
-  pauseDraw();
+  stopAnimation();
 });
 </script>
 

@@ -1,6 +1,7 @@
 <!-- 播客 / 电台 -->
 <template>
   <div class="dj">
+  <PageTransition>
     <!-- 分类 -->
     <Transition name="fade" mode="out-in">
       <n-grid
@@ -77,10 +78,12 @@
         <MainCover :data="formatData(item.radios, 'dj')" type="dj" />
       </div>
     </div>
-  </div>
+    </PageTransition>
+</div>
 </template>
 
-<script setup>
+<script setup>import PageTransition from "@/components/Global/PageTransition.vue";
+
 import { getDjCatelist, getDjRecommend, getDjCategoryRec } from "@/api/dj";
 import { getCacheData } from "@/utils/helper";
 import { useRouter } from "vue-router";

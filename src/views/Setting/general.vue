@@ -7,7 +7,7 @@
       <n-collapse-item title="主题设置" name="theme">
         <n-card class="set-item">
           <div class="name">明暗模式
-            <n-text class="tip">单击切换开关切换主题明暗模式</n-text>
+            <n-text class="tip">我不知道怎么有些人喜欢浅色模式, 这真的太丑了</n-text>
           </div>
           <n-select
             v-model:value="themeType"
@@ -22,6 +22,7 @@
               },
             ]"
             class="set"
+            :disabled="1===1"
             @update:value="themeAuto = false"
           />
         </n-card>
@@ -30,6 +31,7 @@
           <n-switch
             v-model:value="themeAuto"
             :round="false"
+            :disabled="1===1"
             @update:value="
               (val) => {
                 if (val) themeType = osThemeRef;

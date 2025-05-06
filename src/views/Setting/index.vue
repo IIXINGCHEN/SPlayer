@@ -1,24 +1,28 @@
 <!-- 全局设置 -->
 <template>
   <div :class="{ setting: true, 'use-cover': themeAutoCover }">
-    <n-h1 class="title">
-      <n-text>站点设置</n-text>
-    </n-h1>
+    <PageTransition type="fade-down" :duration="0.8">
+      <n-h1 class="title">
+        <n-text>站点设置</n-text>
+      </n-h1>
+    </PageTransition>
     <!-- 导航栏 -->
-    <n-tabs
-      ref="setTabsRef"
-      v-model:value="setTabsValue"
-      type="segment"
-      @update:value="settingTabChange"
-    >
-      <n-tab name="setTab1"> 常规 </n-tab>
-      <n-tab name="setTab2"> 系统 </n-tab>
-      <n-tab name="setTab3"> 播放 </n-tab>
-      <n-tab name="setTab4"> 歌词 </n-tab>
-      <n-tab name="setTab5"> 下载 </n-tab>
-      <n-tab name="setTab6"> 其他 </n-tab>
-      <!--n-tab name="setTab7"> TestOptions </n-tab-->
-    </n-tabs>
+    <PageTransition type="fade-up" :duration="0.8" :delay="0.2">
+      <n-tabs
+        ref="setTabsRef"
+        v-model:value="setTabsValue"
+        type="segment"
+        @update:value="settingTabChange"
+      >
+        <n-tab name="setTab1"> 常规 </n-tab>
+        <n-tab name="setTab2"> 系统 </n-tab>
+        <n-tab name="setTab3"> 播放 </n-tab>
+        <n-tab name="setTab4"> 歌词 </n-tab>
+        <n-tab name="setTab5"> 下载 </n-tab>
+        <n-tab name="setTab6"> 其他 </n-tab>
+        <!--n-tab name="setTab7"> TestOptions </n-tab-->
+      </n-tabs>
+    </PageTransition>
     <!-- 设置项 -->
     <n-scrollbar
       ref="setScrollRef"
@@ -28,20 +32,22 @@
       class="all-set"
       @scroll="allSetScroll"
     >
-      <!-- 常规 -->
-      <General />
-      <!-- 系统 -->
-      <System />
-      <!-- 播放 -->
-      <Player />
-      <!-- 歌词 -->
-      <Lyrics />
-      <!-- 下载 -->
-      <Download />
-      <!-- 其他 -->
-      <Other />
-      <!--TestOptions-->
-      <!--TestOptions /-->
+      <PageTransition type="fade-up" :duration="0.8" :delay="0.4">
+        <!-- 常规 -->
+        <General />
+        <!-- 系统 -->
+        <System />
+        <!-- 播放 -->
+        <Player />
+        <!-- 歌词 -->
+        <Lyrics />
+        <!-- 下载 -->
+        <Download />
+        <!-- 其他 -->
+        <Other />
+        <!--TestOptions-->
+        <!--TestOptions /-->
+      </PageTransition>
     </n-scrollbar>
   </div>
 </template>

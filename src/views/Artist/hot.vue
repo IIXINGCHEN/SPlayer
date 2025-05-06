@@ -1,5 +1,6 @@
 <template>
   <div class="artist-hot">
+  <PageTransition>
     <n-h4 class="title" prefix="bar">
       <n-text class="name">热门歌曲</n-text>
       <div class="more" @click="router.push(`/artist/songs?id=${artistId}`)">
@@ -11,10 +12,12 @@
     </n-h4>
     <!-- 列表 -->
     <SongList :data="artistHotSongs" :showPagination="false" :showTitle="false" />
-  </div>
+    </PageTransition>
+</div>
 </template>
 
-<script setup>
+<script setup>import PageTransition from "@/components/Global/PageTransition.vue";
+
 import { useRouter } from "vue-router";
 import { getArtistSongs } from "@/api/artist";
 import { getSongDetail } from "@/api/song";

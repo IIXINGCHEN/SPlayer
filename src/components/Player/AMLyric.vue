@@ -29,7 +29,7 @@
           '--amll-lyric-player-height': '100%',
           '--amll-lyric-player-width': '100%',
           'height': '100%',
-          'width': '100%',
+          'width': isMobile ? '100%' : '100%',
         }"
         class="am-lyric"
         @line-click="handleLineClick"
@@ -147,20 +147,49 @@ const currentLyrics = computed<LyricLine[]>(() => {
   // 检查是否有TTML格式的歌词
   if (playSongLyric.value?.ttml) {
     console.log('检测到TTML格式歌词');
-    const ttmlLyrics = parseTTMLToAMLL(playSongLyric.value.ttml);
-    console.log('TTML歌词解析结果:', ttmlLyrics);
-    
-    if (isPureInstrumental(ttmlLyrics)) {
-      console.log('检测到纯音乐歌词，不显示歌词');
+    try {
+      const ttmlLyrics = parseTTMLToAMLL(playSongLyric.value.ttml);
+      console.log('TTML歌词解析结果:', ttmlLyrics);
+      
+      // 验证TTML歌词数据的有效性
+      if (!Array.isArray(ttmlLyrics) || ttmlLyrics.length === 0) {
+        console.warn('TTML歌词解析结果为空或格式无效');
+        return [];
+      }
+      
+      // 验证每个歌词行的必要属性
+      const isValidLyrics = ttmlLyrics.every(line => 
+        line && 
+        Array.isArray(line.words) && 
+        typeof line.startTime === 'number' && 
+        typeof line.endTime === 'number'
+      );
+      
+      if (!isValidLyrics) {
+        console.warn('TTML歌词数据格式不完整');
+        return [];
+      }
+      
+      if (isPureInstrumental(ttmlLyrics)) {
+        console.log('检测到纯音乐歌词，不显示歌词');
+        return [];
+      }
+      
+      // 将TTML歌词存储到yrcAMData中并设置hasYrc为true
+      playSongLyric.value.yrcAMData = ttmlLyrics;
+      playSongLyric.value.hasYrc = true;
+      showYrc.value = true; // 强制启用YRC模式
+      
+      console.log('使用TTML格式歌词，行数:', ttmlLyrics.length);
+      return ttmlLyrics;
+    } catch (error) {
+      console.error('TTML歌词解析失败:', error);
       return [];
     }
-    
-    console.log('使用TTML格式歌词，行数:', ttmlLyrics.length);
-    return ttmlLyrics;
   }
   
   // 使用歌词处理逻辑
-  const isYrc = showYrc.value && playSongLyric.value.hasYrc && playSongLyric.value.yrc?.length > 0;
+  const isYrc = (showYrc.value && playSongLyric.value.hasYrc && playSongLyric.value.yrcAMData?.length > 0) || playSongLyric.value?.ttml;
   const lyrics = isYrc ? playSongLyric.value.yrcAMData : playSongLyric.value.lrcAMData;
   console.log('当前使用的歌词类型:', isYrc ? 'YRC' : 'LRC');
   console.log('歌词数据:', lyrics);

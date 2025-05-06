@@ -1,5 +1,6 @@
 <template>
   <div class="like">
+  <PageTransition>
     <n-h1 class="title">我的收藏</n-h1>
     <!-- 数据统计 -->
     <div class="num">
@@ -60,10 +61,12 @@
         </Transition>
       </keep-alive>
     </router-view>
-  </div>
+    </PageTransition>
+</div>
 </template>
 
-<script setup>
+<script setup>import PageTransition from "@/components/Global/PageTransition.vue";
+
 import { storeToRefs } from "pinia";
 import { siteData } from "@/stores";
 import { useRouter } from "vue-router";

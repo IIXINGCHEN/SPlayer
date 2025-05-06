@@ -47,7 +47,7 @@ export const initPlayer = async (playNow = false) => {
     const playSongData = music.getPlaySongData;
     // 是否为本地歌曲
     const isLocalSong = playSongData?.path ? true : false;
-    console.log("当前为本地歌曲喵~");
+    console.log("当前为本地歌曲");
     // 获取封面
     if (isLocalSong) {
       music.playSongData.localCover = await getLocalCoverData(playSongData?.path);
@@ -72,7 +72,7 @@ export const initPlayer = async (playNow = false) => {
       const url = await getNormalSongUrl(songId, status, playNow);
       // 正常播放地址
       if (url) {
-        $message.info("获取链接成功, 开始播放喵~");
+        $message.info("获取链接成功, 开始播放");
         createPlayer(url);
       }
       // 无法正常获取播放地址
@@ -82,15 +82,15 @@ export const initPlayer = async (playNow = false) => {
           status.playUseOtherSource = true;
           createPlayer(unblockUrl);
         } else {
-          $message.warning("获取失败, 跳过操作喵~");
+          $message.warning("获取失败, 跳过操作");
           isPlayEnd = true;
           status.playUseOtherSource = false;
           // 是否为最后一首
           if (playIndex === playList.length - 1) {
             status.playState = false;
-            $message.warning("当前列表歌曲无法播放，请更换歌曲喵~");
+            $message.warning("当前列表歌曲无法播放，请更换歌曲");
           } else {
-            $message.error("该歌曲暂无音源，跳至下一首喵~");
+            $message.error("该歌曲暂无音源，跳至下一首");
             changePlayIndex("next", true);
           }
         }
@@ -102,7 +102,7 @@ export const initPlayer = async (playNow = false) => {
         } else {
           status.playLoading = false;
           status.playState = false;
-          $message.warning("列表中暂无可播放歌曲喵~", { closable: true, duration: 5000 });
+          $message.warning("列表中暂无可播放歌曲", { closable: true, duration: 5000 });
         }
       }
     }
@@ -200,7 +200,8 @@ const getFromUnblockMusic = async (data, status, playNow) => {
       console.log(response);
       if (response?.code === 200 && response?.data) {
         if (response.data.proxyUrl) {
-          musicUrl = response.data.url.replace(/^http:\/\/lx\.sycdn\.kuwo\.cn\//, "/api/kuwourl/songcdn/"); 
+          // musicUrl = response.data.url.replace(/^http:\/\/lx\.sycdn\.kuwo\.cn\//, "/api/kuwourl/songcdn/"); 
+          musicUrl = response.data.proxyUrl
         } else {
           musicUrl = response.data.url;
         };
@@ -224,7 +225,7 @@ const getFromUnblockMusic = async (data, status, playNow) => {
     if (musicUrl) {
       // 将 http 替换为 https
       musicUrl = musicUrl.replace(/^http:/, "https:");
-      $message.info("获取链接成功, 正在播放喵~");
+      $message.info("获取链接成功, 正在播放");
       status.playUseOtherSource = true;
       if (playNow) status.playState = true;
       status.playLoading = false;

@@ -1,6 +1,7 @@
 <!-- 最近播放 -->
 <template>
   <div class="history">
+  <PageTransition>
     <n-h1 class="title">
       <n-text>最近播放</n-text>
       <n-text class="num" depth="3">共 {{ historyPlaylist?.length || 0 }} 首</n-text>
@@ -24,10 +25,12 @@
       </div>
       <n-empty v-else class="empty" description="你还没播放任何歌曲" />
     </Transition>
-  </div>
+    </PageTransition>
+</div>
 </template>
 
-<script setup>
+<script setup>import PageTransition from "@/components/Global/PageTransition.vue";
+
 import { storeToRefs } from "pinia";
 import { musicData } from "@/stores";
 

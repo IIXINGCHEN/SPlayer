@@ -1,6 +1,7 @@
 <!-- 首页 -->
 <template>
-  <div class="home">
+  <PageTransition>
+    <div class="home">
     <!-- 欢迎 -->
     <div class="greetings">
       <n-h1 class="welcome">
@@ -42,12 +43,14 @@
         :columns="item.columns"
       />
     </div>
-  </div>
+    </div>
+  </PageTransition>
 </template>
 
 <script setup>
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
+import PageTransition from "@/components/Global/PageTransition.vue";
 import { getGreetings } from "@/utils/timeTools";
 import {
   getDailyRec,

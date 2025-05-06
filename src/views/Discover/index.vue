@@ -1,6 +1,7 @@
 <!-- 发现 - 主页面 -->
 <template>
   <div class="discover">
+  <PageTransition>
     <n-h1 class="title">发现音乐</n-h1>
     <!-- 标签页 -->
     <n-tabs v-model:value="tabValue" class="tabs" type="segment" @update:value="tabChange">
@@ -17,10 +18,12 @@
         </Transition>
       </keep-alive>
     </router-view>
-  </div>
+    </PageTransition>
+</div>
 </template>
 
-<script setup>
+<script setup>import PageTransition from "@/components/Global/PageTransition.vue";
+
 import { useRouter } from "vue-router";
 
 const router = useRouter();

@@ -1,5 +1,6 @@
 <template>
   <div class="cloud">
+  <PageTransition>
     <n-h1 class="title">我的云盘</n-h1>
     <!-- 基础状态 -->
     <n-progress
@@ -88,10 +89,12 @@
       </div>
       <n-empty v-else class="empty" description="你还有任何歌曲，快去上传吧" />
     </Transition>
-  </div>
+    </PageTransition>
+</div>
 </template>
 
-<script setup>
+<script setup>import PageTransition from "@/components/Global/PageTransition.vue";
+
 import { indexedDBData } from "@/stores";
 import { getUserCloud } from "@/api/cloud";
 import { fuzzySearch } from "@/utils/helper";

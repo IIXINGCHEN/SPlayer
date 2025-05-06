@@ -1,6 +1,7 @@
 <!-- 发现 - 歌手 -->
 <template>
   <div class="dsc-artists">
+  <PageTransition>
     <div class="menu">
       <!-- 字母分类 -->
       <n-flex class="initial">
@@ -47,10 +48,12 @@
         加载更多
       </n-button>
     </n-flex>
-  </div>
+    </PageTransition>
+</div>
 </template>
 
-<script setup>
+<script setup>import PageTransition from "@/components/Global/PageTransition.vue";
+
 import { useRouter } from "vue-router";
 import { siteSettings } from "@/stores";
 import { getArtistList } from "@/api/artist";

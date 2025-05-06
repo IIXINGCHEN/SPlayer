@@ -1,6 +1,7 @@
 <!-- 搜索 - 歌手 -->
 <template>
   <div class="search-artists">
+  <PageTransition>
     <!-- 列表 -->
     <Transition name="fade" mode="out-in">
       <div v-if="searchData !== 'empty'" class="list">
@@ -19,10 +20,12 @@
         </template>
       </n-empty>
     </Transition>
-  </div>
+    </PageTransition>
+</div>
 </template>
 
-<script setup>
+<script setup>import PageTransition from "@/components/Global/PageTransition.vue";
+
 import { getSearchRes } from "@/api/search";
 import { useRouter } from "vue-router";
 import { siteSettings } from "@/stores";

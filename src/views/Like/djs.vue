@@ -1,5 +1,6 @@
 <template>
   <div class="like-videos">
+  <PageTransition>
     <Transition name="fade" mode="out-in">
       <div v-if="userLikeData.djs?.length" class="list">
         <!-- 列表 -->
@@ -13,10 +14,12 @@
         size="large"
       />
     </Transition>
-  </div>
+    </PageTransition>
+</div>
 </template>
 
-<script setup>
+<script setup>import PageTransition from "@/components/Global/PageTransition.vue";
+
 import { storeToRefs } from "pinia";
 import { siteData } from "@/stores";
 

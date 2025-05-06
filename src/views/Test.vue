@@ -1,6 +1,31 @@
 <template>
   <div class="test">
+  <PageTransition>
     <n-h1>Test Page</n-h1>
+    <n-card title="歌词数据" style="margin-bottom: 20px">
+      <n-scrollbar style="max-height: 300px">
+        <div class="lyric-data">
+          <div class="lyric-status">
+            <h3>歌词状态：</h3>
+            <p>普通翻译：{{ music.playSongLyric.hasLrcTran }}</p>
+            <p>普通音译：{{ music.playSongLyric.hasLrcRoma }}</p>
+            <p>逐字歌词：{{ music.playSongLyric.hasYrc }}</p>
+            <p>逐字翻译：{{ music.playSongLyric.hasYrcTran }}</p>
+            <p>逐字音译：{{ music.playSongLyric.hasYrcRoma }}</p>
+          </div>
+          <div class="lyric-content">
+            <h3>普通歌词：</h3>
+            <pre>{{ music.playSongLyric.lrc }}</pre>
+            <h3>逐字歌词：</h3>
+            <pre>{{ music.playSongLyric.yrc }}</pre>
+            <h3>AMLL普通歌词：</h3>
+            <pre>{{ music.playSongLyric.lrcAMData }}</pre>
+            <h3>AMLL逐字歌词：</h3>
+            <pre>{{ music.playSongLyric.yrcAMData }}</pre>
+          </div>
+        </div>
+      </n-scrollbar>
+    </n-card>
     <n-card title="频谱数据" style="margin-bottom: 20px">
       <n-scrollbar style="max-height: 120px">
         {{ status.spectrumsData }}
@@ -51,17 +76,20 @@
     <n-card title="频谱图">
       <canvas ref="canvasRef" class="avBars" style="width: 100%" />
     </n-card>
-  </div>
+    </PageTransition>
+</div>
 </template>
 
-<script setup>
+<script setup>import PageTransition from "@/components/Global/PageTransition.vue";
+
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
-import { siteStatus } from "@/stores";
+import { siteStatus, musicData } from "@/stores";
 import { LyricPlayer } from '@applemusic-like-lyrics/vue';
 import { useRafFn } from '@vueuse/core';
 
 const status = siteStatus();
 
+const music = musicData();
 // 频谱图相关
 const canvasRef = ref(null);
 
@@ -192,6 +220,43 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
+.lyric-data {
+  padding: 16px;
+
+  .lyric-status {
+    margin-bottom: 20px;
+
+    h3 {
+      margin-bottom: 10px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    p {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+  }
+
+  .lyric-content {
+    h3 {
+      margin: 15px 0 10px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: monospace;
+      background-color: rgba(0, 0, 0, 0.02);
+      padding: 10px;
+      border-radius: 4px;
+      margin: 5px 0 15px;
+    }
+  }
+}
+
 .avBars {
   mask: linear-gradient(
     90deg,

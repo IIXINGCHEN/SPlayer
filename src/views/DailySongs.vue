@@ -1,6 +1,7 @@
 <!-- 每日推荐 -->
 <template>
   <div class="daily-songs">
+  <PageTransition>
     <div class="title">
       <n-text class="name">每日推荐</n-text>
       <div class="tip">
@@ -43,10 +44,12 @@
     </div>
     <!-- 列表 -->
     <SongList :data="dailySongsData.data" />
-  </div>
+    </PageTransition>
+</div>
 </template>
 
-<script setup>
+<script setup>import PageTransition from "@/components/Global/PageTransition.vue";
+
 import { NIcon } from "naive-ui";
 import { storeToRefs } from "pinia";
 import { siteData } from "@/stores";
