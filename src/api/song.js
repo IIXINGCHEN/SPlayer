@@ -89,7 +89,7 @@ export const getSongLyric = async (id) => {
   
   return {
     original: responseData,
-    ttml: responseData ? convertToTTML(responseData) : "" // 添加TTML格式，确保数据存在
+    ttml: responseData,
   };
 };
 

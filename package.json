@@ -74,6 +74,7 @@
     "pinia-plugin-persistedstate": "^3.2.3",
     "plyr": "^3.7.8",
     "screenfull": "^6.0.2",
+    "tsd": "^0.32.0",
     "vite-plugin-top-level-await": "^1.5.0",
     "vite-plugin-wasm": "^3.4.1",
     "vue": "^3.5.13",

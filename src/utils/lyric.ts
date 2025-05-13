@@ -290,18 +290,8 @@ export function parseTTMLToAMLL(ttmlContent: string): AMLLLyricLine[] {
           Math.max(word.endTime, startTime + 100) : // 确保每个词至少持续100ms
           startTime + 100;
 
-        // 处理单词间的空格
-        let processedWord = word?.word?.trim() || ' ';
-        const nextWord = arr[index + 1]?.word?.trim();
-
-        // 检查当前词和下一个词是否都是英文
-        const isCurrentEnglish = /[a-zA-Z]/.test(processedWord);
-        const isNextEnglish = nextWord && /[a-zA-Z]/.test(nextWord);
-
-        // 如果当前词和下一个词都是英文，且当前词末尾没有空格，则添加空格
-        if (isCurrentEnglish && isNextEnglish && !processedWord.endsWith(' ')) {
-          processedWord += ' ';
-        }
+        // 保留原始单词，不进行 trim
+        let processedWord = word?.word || ' ';
 
         return {
           word: processedWord,

@@ -5,6 +5,7 @@ const useSiteSettingsStore = defineStore("siteSettings", {
   state: () => {
     return {
       // 基础配置
+      readProtocol: false,
       closeTip: true, // 关闭软件提醒弹窗
       closeType: "hide", // 关闭方式 close 直接关闭 / hide 最小化到任务栏
       showTaskbarProgress: false, // 显示歌曲任务栏进度
@@ -24,7 +25,7 @@ const useSiteSettingsStore = defineStore("siteSettings", {
       themeAuto: false,
       themeTypeName: "red",
       themeTypeData: {},
-      themeAutoCover: true, // 主题色跟随封面
+      themeAutoCover: false, // 主题色跟随封面
       themeAutoCoverType: "secondary",
       // 播放部分
       playCoverType: "cover", // 播放器样式

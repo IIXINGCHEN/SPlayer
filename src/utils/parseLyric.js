@@ -39,10 +39,7 @@ export const parseLyric = (data) => {
       // 普通歌词数组
       lrc: [],
       // 逐字歌词数据
-      yrc: [],
-      // AMLL格式歌词数据
-      lrcAMData: [],
-      yrcAMData: []
+      yrc: []
     };
     // 普通歌词
     if (lrcData.lrc) {
@@ -54,17 +51,6 @@ export const parseLyric = (data) => {
       result.lrc = lrcData.romalrc
         ? parseOtherLrc(result.lrc, parseLrc(lrcData.romalrc), "roma")
         : result.lrc;
-      
-      // 转换为AMLL格式
-      result.lrcAMData = result.lrc.map((line, index, lines) => ({
-        words: [{ startTime: line.time * 1000, endTime: (lines[index + 1]?.time || line.time + 5) * 1000, word: line.content }],
-        startTime: line.time * 1000,
-        endTime: (lines[index + 1]?.time || line.time + 5) * 1000,
-        translatedLyric: line.tran || "",
-        romanLyric: line.roma || "",
-        isBG: false,
-        isDuet: false
-      }));
     }
     // 逐字歌词
     if (lrcData.yrc) {
