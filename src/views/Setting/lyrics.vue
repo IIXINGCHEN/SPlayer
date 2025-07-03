@@ -13,9 +13,9 @@
               歌词显示测试
             </n-text>
           </div>
-          <n-slider v-model:value="lyricsFontSize" :tooltip="false" :max="56" :min="36" :step="1" :marks="{
-              36: '最小',
-              46: '默认',
+          <n-slider v-model:value="lyricsFontSize" :tooltip="false" :max="56" :min="25" :step="1" :marks="{
+              25: '最小',
+              36: '默认',
               56: '最大',
             }" />
         </n-card>

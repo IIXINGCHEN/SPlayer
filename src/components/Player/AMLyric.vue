@@ -20,7 +20,7 @@
         :lineScaleSpringParams="settings.springParams.scale" 
         :style="{
           '--amll-lyric-view-color': mainColor,
-          '--amll-lyric-player-font-size': isMobile ? '25px' : lyricsFontSize + 'px',
+          '--amll-lyric-player-font-size': lyricsFontSize + 'px',
           'font-weight': lyricsBold ? 'bold' : 'normal',
           'font-family': lyricsFont !== 'PingFang SC' ? lyricsFont : '',
           'visibility': 'visible',
