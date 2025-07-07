@@ -8,12 +8,6 @@
 
 > [!IMPORTANT]
 >
-> # Q&A
->
-> ### 你为什么要维护这个已经过时的版本
->
-> 那是因为在imsyy的dev分支将会向本地播放器发展, 且把在线版本进入基本维护模式而导致有些功能将不会在网页端生效, 该版本是最后一个支持移动端和网页部署的版本, 我将会尽量把功能与dev分支同步, 以便能使用到与dev分支相同的功能.
->
 > ### 严肃警告
 >
 > - 请务必遵守 [GNU Affero General Public License (AGPL-3.0)](https://www.gnu.org/licenses/agpl-3.0.html) 许可协议
@@ -31,9 +25,10 @@
 - 欢迎各位大佬 `Star` 😍
 
 ## 👀 Demo
-
-- [SPlayer](https://player.focalors.ltd/)
-  > 该版本为dev分支
+- [SPlayer](https://player.focalors.ltd/)   
+**本项目 CDN 加速及安全防护由 [Tencent EdgeOne](https://edgeone.ai/zh?from=github) 赞助**
+   
+![edgeone](https://edgeone.ai/media/34fe3a45-492d-4ea4-ae5d-ea1087ca7b4b.png)
 
 ## 🎉 功能
 
@@ -126,11 +121,6 @@
 #### 以下是TTML歌词API的部署 (可选)
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/imsyys-projects/clone?repository-url=https%3A%2F%2Fgithub.com%2FIamFurina%2FLyric-Atlas-API)
 ### 🔧 开始部署本体
-#### EdgeOne Page 一键部署
-> 不是我恰饭, 虽然`Edgeone`没有足够成熟, 但是访问和构建速度是可以与`Vercel`堪比的, 推荐大陆地区的人们都试一下👍
-
-[![Use EdgeOne Pages to deploy](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https://github.com/IamFurina/SPlayer)   
-进入后选择框架为`Vue`, 随后把输出目录设置为`out/renderer`, 设置方式同下
 #### 通过Fork仓库部署
 2. 点击本仓库右上角的 `Fork`，复制本仓库到你的 `GitHub` 账号
 3. 复制 `/.env.example` 文件并重命名为 `/.env`
