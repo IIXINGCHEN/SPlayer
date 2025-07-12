@@ -113,11 +113,11 @@
 
 ### 🔧 部署相应依赖
 
-1. 本程序依赖 [NeteaseCloudMusicApi](https://github.com/IamFurina/NeteaseCloudMusicApi) 运行以及[UNM-Server](https://act.focalors.ltd/unm-server)，并按照步骤部署, 请确保您已成功部署该项目，并成功取得在线访问地址
+1. 本程序依赖 [NeteaseCloudMusicApi](https://github.com/neteasecloudmusicapireborn/api) 运行以及[UNM-Server](https://act.focalors.ltd/unm-server)，并按照步骤部署, 请确保您已成功部署该项目，并成功取得在线访问地址
 #### 以下是网易云API的部署
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/imsyys-projects/clone?repository-url=https://github.com/IamFurina/NeteaseCloudMusicAPI)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/imsyys-projects/clone?repository-url=https://github.com/neteasecloudmusicapireborn/api)
 #### 以下是UNM-Server的部署
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/imsyys-projects/clone?repository-url=https://github.com/IamFurina/Unm-server)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/imsyys-projects/clone?repository-url=https://github.com/neteasecloudmusicapireborn/Unm)
 #### 以下是TTML歌词API的部署 (可选)
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/imsyys-projects/clone?repository-url=https%3A%2F%2Fgithub.com%2FIamFurina%2FLyric-Atlas-API)
 ### 🔧 开始部署本体
