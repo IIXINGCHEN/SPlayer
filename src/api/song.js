@@ -1,5 +1,8 @@
 import axios from "@/utils/request";
-import { convertToTTML } from '@/utils/parseLyric';
+import { siteSettings } from "@/stores";
+
+
+
 /**
  * 歌曲部分
  */
@@ -55,7 +58,10 @@ export const getSongUrl = (id, level = "standard") => {
  */
 export const getMusicNumUrl = async (id) => {
   const server = "pyncmd,kuwo";
-  if (import.meta.env["RENDERER_VITE_SITE_ROOT"] === "true") {
+  const settings = siteSettings();
+  if (import.meta.env["RENDERER_VITE_SITE_ROOT"] === "false" && settings.useCustomUNMServer) {
+    var unmurl = settings.unmServer;
+  } else if (import.meta.env["RENDERER_VITE_SITE_ROOT"] === "true" && !settings.useCustomUNMServer) {
     var unmurl = "/api/unblock";
   } else {
     var unmurl = `${import.meta.env.VITE_UNM_API}`;
@@ -99,6 +105,7 @@ export const getSongLyric = async (id) => {
  * @param {number} br - 码率, 默认设置了 999000 即最大码率, 如果要 320k 则可设置为 320000, 其他类推
  */
 export const getSongDownloadNew = async (params) => {
+  const settings = siteSettings();
   // 参数校验
   if (!params?.id || !params?.br) {
     throw new Error("Missing required parameters");

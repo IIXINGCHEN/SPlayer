@@ -70,6 +70,38 @@
       <div class="name">显示 GitHub 仓库按钮</div>
       <n-switch v-model:value="showGithub" :round="false" />
     </n-card>
+    <n-collapse>
+      <n-collapse-item title="网易云API设定">
+        <n-card class="set-item">
+          <div class="name">
+            使用自定义网易云API
+            <n-text class="tip">开启后将使用自定义网易云音乐API地址, 切换或刷新页面生效</n-text>
+          </div>
+          <n-switch v-model:value="useCustomNCMServer" :round="false" />
+        </n-card>
+        <n-card class="set-item">
+          <div class="name">
+            网易云API地址
+            <n-text class="tip">请输入自定义网易云API地址（如 http://localhost:3000 ,后面不带斜杠）</n-text>
+          </div>
+          <n-input v-model:value="ncmServer" :disabled="!useCustomNCMServer" class="set" type="text" placeholder="请输入网易云API地址" />
+        </n-card>
+        <n-card class="set-item">
+          <div class="name">
+            使用自定义 UNM 服务器
+            <n-text class="tip">开启后将使用自定义 UnblockNeteaseMusic 服务器地址, 切换或刷新页面生效</n-text>
+          </div>
+          <n-switch v-model:value="useCustomUNMServer" :round="false" />
+        </n-card>
+        <n-card class="set-item">
+          <div class="name">
+            UNM 服务器地址
+            <n-text class="tip">请输入自定义 UNM 服务器地址（如 http://localhost:3000 ,后面不带斜杠）</n-text>
+          </div>
+          <n-input v-model:value="unmServer" :disabled="!useCustomUNMServer" class="set" type="text" placeholder="请输入 UNM 服务器地址" />
+        </n-card>
+      </n-collapse-item>
+    </n-collapse>
     <n-card class="set-item">
       <div class="name">
         默认加载数量
@@ -92,13 +124,6 @@
     </n-card>
     <n-card class="set-item">
       <div class="name">
-        程序重置
-        <n-text class="tip">若程序显示异常或出现问题时可尝试此操作</n-text>
-      </div>
-      <n-button strong secondary type="error" @click="resetApp"> 重置 </n-button>
-    </n-card>
-    <n-card class="set-item">
-      <div class="name">
         清除PWA缓存
         <n-text class="tip">此操作会清除PWA缓存并拉取新的版本, 适用于同步仓库部署完成后使用</n-text>
       </div>
@@ -106,11 +131,18 @@
     </n-card>
     <n-card class="set-item">
       <div class="name">
+        程序重置
+        <n-text class="tip">若程序显示异常或出现问题时可尝试此操作</n-text>
+      </div>
+      <n-button strong secondary type="error" @click="resetApp"> 重置 </n-button>
+    </n-card>
+    <!--n-card class="set-item">
+      <div class="name">
         打开完整设置页
         <n-text class="tip">打开完整设置页面，可在此处查看更多设置</n-text>
       </div>
       <n-button strong secondary type="error" @click="toSettingsPage"> 打开 </n-button>
-    </n-card>
+    </n-card-->
   </div>
 </template>
 
@@ -122,7 +154,7 @@ import debounce from "@/utils/debounce";
 
 const status = siteStatus();
 const settings = siteSettings();
-const { themeAuto, loadSize, showGithub, proxyProtocol, proxyServe, proxyPort, useRealIP, realIP } =
+const { themeAuto, loadSize, showGithub, proxyProtocol, proxyServe, proxyPort, useRealIP, realIP, useCustomNCMServer, ncmServer, useCustomUNMServer, unmServer } =
   storeToRefs(settings);
 
 // 程序重置

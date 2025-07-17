@@ -188,13 +188,11 @@ const checkUpdatesWeb = async () => {
       const update = await registration.update();
       
       if (update) {
-        $message.info('正在检查PWA更新...', {
-          duration: 2000
-        });
+        console.info('正在检查PWA更新...');
       }
     } catch (error) {
       console.error('PWA更新检查失败:', error);
-      $message.error('PWA更新检查失败', {
+      $message.error('PWA更新检查失败, 请尝试在"其他"设置中清除PWA缓存', {
         duration: 2000
       });
     }
@@ -222,10 +220,10 @@ const canNotConnect = (error) => {
     },
   });
   */
-  $notification[error]({
-    title: "呃, 好像出了点问题(っ °Д °;)っ",
-    content: "如果是源代码出现问题, 请联系开发者解决; 如果是您的网络出现问题, 请检查您的网络适配器后重试",
-    positiveText: "刷新网页",
+  $notification.error({
+    content: "呃, 好像出了点问题(っ °Д °;)っ",
+    meta: "如果是源代码出现问题, 请联系开发者解决; 如果是您的网络出现问题, 请检查您的网络适配器后重试",
+    duration: 5000,
   });
   $message.error("网络连接错误：" + error.message, {
     duration: 0,

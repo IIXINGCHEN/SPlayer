@@ -85,6 +85,10 @@ const useSiteSettingsStore = defineStore("siteSettings", {
       downloadLyricsToFile: true,
       downloadCoverToFile: true,
       // 网络部分
+      useCustomNCMServer: false, // 是否使用自定义NCM服务器
+      ncmServer: "https://music-api.example.com", // NCM服务器
+      useCustomUNMServer: false, // 是否使用自定义UNM服务器
+      unmServer: "https://unm-server.example.com", // UNM服务器
       useRealIP: true, // 是否使用真实IP地址
       realIP: "116.25.146.177", // 真实IP地址
       proxyProtocol: "off", // 代理协议

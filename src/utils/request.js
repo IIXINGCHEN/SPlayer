@@ -18,6 +18,16 @@ axios.defaults.withCredentials = true;
 axios.interceptors.request.use(
   (request) => {
     const settings = siteSettings();
+    // 动态设置baseURL，避免顶层初始化错误
+    if (settings.useCustomNCMServer) {
+      axios.defaults.baseURL = settings.ncmServer;
+    } else if (!settings.useCustomNCMServer) {
+      if (checkPlatform.electron() || import.meta.env["RENDERER_VITE_SITE_ROOT"] === "true") {
+        axios.defaults.baseURL = "/api/netease";
+      } else {
+        axios.defaults.baseURL = import.meta.env["RENDERER_VITE_SERVER_URL"];
+      }
+    }
     if (!request.params) request.params = {};
     // 附加 cookie
     if (!request.noCookie && (isLogin() || getCookie("MUSIC_U") !== null)) {
@@ -32,10 +42,11 @@ axios.interceptors.request.use(
       request.params.realIP = settings.realIP || "116.25.146.177";
     }
     // 附加代理
-    const proxy = JSON.parse(localStorage.getItem("siteSettings")).proxyProtocol;
+    const localSettings = JSON.parse(localStorage.getItem("siteSettings") || '{}');
+    const proxy = localSettings.proxyProtocol;
     if (proxy !== "off") {
-      const server = JSON.parse(localStorage.getItem("siteSettings")).proxyServe;
-      const port = parseInt(localStorage.getItem("siteSettings").proxyPort);
+      const server = localSettings.proxyServe;
+      const port = parseInt(localSettings.proxyPort);
       if (server && port) {
         request.params.proxy = `${proxy}://${server}:${port}`;
       }
