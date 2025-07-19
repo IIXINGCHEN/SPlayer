@@ -48,6 +48,7 @@
       </n-flex>
       <!-- 搜索框 -->
       <SearchInp />
+      <!-- 显示github -->
       <Transition name="fade" mode="out-in">
         <n-button
           v-if="showGithub"
@@ -66,20 +67,6 @@
       </Transition>
     </div>
     <div class="right">
-      <!-- 全局菜单 -->
-      <!--n-button
-        :focusable="false"
-        class="settings"
-        circle
-        quaternary
-        @click="openSettings"
-      >
-        <template #icon>
-          <n-icon>
-            <SvgIcon icon="round-settings" />
-          </n-icon>
-        </template>
-      </n-button-->
       <n-dropdown
         :show="mainMenuShow"
         :show-arrow="true"
@@ -132,7 +119,7 @@ const { showGithub, showSider, themeAutoCover } = storeToRefs(sitesettings);
 // 站点信息
 const siteVersion = packageJson.version;
 const siteTemp = import.meta.env.RENDERER_VITE_SITE_TITLE;
-const siteName = siteTemp + " v." + siteVersion;
+const siteName = siteTemp + " v" + siteVersion;
 
 // 打开 GitHub
 const openGithub = () => {
@@ -146,11 +133,7 @@ const openSettings = () => {
     settingsRef.value.showModal();
   }
 };
-/*
-const openSettings = () => {
-  window.location.href = "/#/setting"; 
-}
-*/
+
 
 // 主菜单渲染
 const mainMenuShow = ref(false);

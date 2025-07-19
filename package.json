@@ -1,10 +1,10 @@
 {
   "name": "splayer",
-  "version": "2.7.17",
+  "version": "2.7.20",
   "description": "一个部署简单且界面美观的音乐播放器",
   "main": "./out/main/index.js",
   "author": "IamFurina",
-  "home": "https://index.focalors.ltd",
+  "home": "https://www.focalors.ltd",
   "github": "https://github.com/IamFurina/SPlayer",
   "repository": "github:IamFurina/SPlayer",
   "license": "AGPL-3.0",
@@ -27,7 +27,6 @@
     "build:linux": "npm run build && electron-builder --linux --config"
   },
   "dependencies": {
-    "@UnblockNeteaseMusic/server": "npm:@unblockneteasemusic/server@0.27.8-patch.1",
     "@applemusic-like-lyrics/core": "latest",
     "@applemusic-like-lyrics/lyric": "latest",
     "@applemusic-like-lyrics/react": "latest",
@@ -44,7 +43,6 @@
     "@pixi/filter-color-matrix": "^7.4.3",
     "@pixi/sprite": "^7.4.3",
     "@vueuse/core": "^13.5.0",
-    "NeteaseCloudMusicApi": "^4.27.0",
     "axios": "^1.10.0",
     "colorthief": "^2.6.0",
     "dayjs": "^1.11.13",
@@ -76,7 +74,7 @@
     "plyr": "^3.7.8",
     "screenfull": "^6.0.2",
     "tsd": "^0.32.0",
-    "vite-plugin-top-level-await": "^1.5.0",
+    "vite-plugin-top-level-await": "^1.6.0",
     "vite-plugin-wasm": "^3.5.0",
     "vue": "^3.5.17",
     "vue-i18n": "^9.14.5",

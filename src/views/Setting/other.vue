@@ -4,14 +4,14 @@
     <n-card class="set-item">
       <div class="name">
         使用真实 IP 地址
-        <n-text class="tip">在海外或部分地区可能会受到限制，可开启此处尝试解决</n-text>
+        <n-text class="tip">十分推荐开启的功能，尤其是用国外服务器或部署平台的网易云音乐API, 在海外或部分地区可能会受到限制，可开启此处解决</n-text>
       </div>
       <n-switch v-model:value="useRealIP" :round="false" />
     </n-card>
     <n-card class="set-item">
       <div class="name">
         真实 IP 地址
-        <n-text class="tip">可在此处输入国内 IP</n-text>
+        <n-text class="tip">可在此处输入国内 IP, 可以通过CMD的ping music.163.com获取</n-text>
       </div>
       <n-input v-model:value="realIP" :disabled="!useRealIP" class="set" type="text" placeholder="请填写真实 IP 地址">
         <template #prefix>
@@ -73,6 +73,9 @@
     <n-collapse>
       <n-collapse-item title="网易云API设定">
         <n-card class="set-item">
+          <n-text class="tip">网站当前的默认API有可能随时超出而关闭, 可以通过目前自部署或者目前网络上公开使用的API来解决</n-text>
+        </n-card>
+        <n-card class="set-item">
           <div class="name">
             使用自定义网易云API
             <n-text class="tip">开启后将使用自定义网易云音乐API地址, 切换或刷新页面生效</n-text>
@@ -99,6 +102,11 @@
             <n-text class="tip">请输入自定义 UNM 服务器地址（如 http://localhost:3000 ,后面不带斜杠）</n-text>
           </div>
           <n-input v-model:value="unmServer" :disabled="!useCustomUNMServer" class="set" type="text" placeholder="请输入 UNM 服务器地址" />
+        </n-card>
+        <n-card class="set-item">
+            <n-text class="tip" style="word-break: break-all; white-space: pre-line;">
+            提示: 如果您使用NeteaseCloudMusicApi的Reborn版本, 可以在网易云音乐API地址的基础上增加"/song/url"地址, 如 http://localhost:3000/song/url
+            </n-text>
         </n-card>
       </n-collapse-item>
     </n-collapse>
@@ -182,7 +190,7 @@ const resetApp = () => {
   });
 };
 
-// 从服务器获取最新页面
+// 清除PWA缓存
 const getNewPage = () => {
   $dialog.warning({
     title: "确定要清除缓存并刷新页面吗?",

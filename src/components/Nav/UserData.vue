@@ -42,6 +42,8 @@
   <Login ref="loginRef" />
   <!-- 全局设置 -->
   <settings ref="settingsRef" />
+  <!-- 捐赠弹窗 -->
+  <DonateCreator ref="donateRef" />
 </template>
 
 <script setup>
@@ -52,11 +54,13 @@ import { siteData, siteSettings } from "@/stores";
 import SvgIcon from "@/components/Global/SvgIcon";
 import userSignIn from "@/utils/userSignIn";
 import settings from "@/components/Modal/Settings.vue"
+import DonateCreator from "@/components/Modal/DonateCreator.vue"
 
 const data = siteData();
 const router = useRouter();
 const setting = siteSettings();
 const settingsRef = ref(null); // 全局设置
+const donateRef = ref(null); // 捐赠弹窗
 const { userLoginStatus, userData, userLikeData } = storeToRefs(data);
 const { themeType } = storeToRefs(setting);
 
@@ -127,33 +131,49 @@ const createUserData = () => {
   );
 };
 
+// 判断是否显示捐赠入口
+const showDonate = computed(() => {
+  const host = window.location.host.replace(/:\d+$/, "");
+  const allowHost = ["player.focalors.ltd", "localhost"];
+  // 兼容localhost:6944
+  const matchHost = allowHost.includes(host);
+  // 环境变量
+  const noDonate = import.meta.env.RENDERER_VITE_NO_DONATE === true || import.meta.env.RENDERER_VITE_NO_DONATE === 'true';
+  return !noDonate;
+});
+
 // 用户信息
-const userMenuOptions = computed(() => [
-  {
-    key: "header",
-    type: "render",
-    render: createUserData,
-  },
-  {
-    type: "divider",
-    key: "d1",
-  },
-  {
-    label: themeType.value === "dark" ? "浅色模式" : "深色模式",
-    key: "darkOrlight",
-    icon: renderIcon(themeType.value === "dark" ? "round-wb-sunny" : "round-dark-mode"),
-  },
-  {
-    label: "全局设置",
-    key: "setting",
-    icon: renderIcon("round-settings"),
-  },
-  {
+const userMenuOptions = computed(() => {
+  const arr = [
+    {
+      key: "header",
+      type: "render",
+      render: createUserData,
+    },
+    {
+      type: "divider",
+      key: "d1",
+    },
+    {
+      label: "全局设置",
+      key: "setting",
+      icon: renderIcon("round-settings"),
+    },
+  ];
+  if (showDonate.value) {
+    arr.push({
+      label: "捐赠入口",
+      key: "donate",
+      icon: renderIcon("donate"),
+    });
+  }
+  arr.push({
     label: userLoginStatus.value ? "退出登录" : "登录账号",
     key: "logoutOrlogin",
     icon: renderIcon(userLoginStatus.value ? "logout" : "login"),
-  },
-]);
+  });
+  return arr;
+});
 
 // 用户信息选中
 const userMenuSelect = (key) => {
@@ -173,6 +193,15 @@ const userMenuSelect = (key) => {
     case "setting":
       if (settingsRef.value) {
         settingsRef.value.showModal();
+      }
+      break;
+    // 捐赠入口
+    case "donate":
+      if (donateRef.value) {
+        // 你可以传入图片数组，也可以不传，稍后手动添加
+        donateRef.value.open([
+          // 例："/imgs/donate/wechat.png", "/imgs/donate/alipay.png"
+        ]);
       }
       break;
     default:

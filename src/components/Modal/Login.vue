@@ -15,6 +15,9 @@
       <div class="title">
         <img class="logo" src="/imgs/icons/favicon.png?asset" alt="logo" />
       </div>
+      <n-alert type="error" style="margin-bottom: 16px;">
+        警告: 由于网易云音乐官方正在严查脚本使用者，会把第三方网易云API误判从而会被冻结账号，在风波过去之前建议先不要登录
+      </n-alert>
       <!-- 登录方式 -->
       <n-tabs class="login-tabs" default-value="login-qr" type="segment" animated>
         <n-tab-pane name="login-qr" tab="扫码登录">

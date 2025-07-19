@@ -5,10 +5,10 @@
       <div class="name">
         启动时自动播放
         <n-text class="tip">
-          {{ checkPlatform.electron() ? "程序启动时自动播放上次歌曲" : "网站加载时自动播放上次歌曲; 注意: 大部分浏览器不支持自动播放功能" }}
+          {{ checkPlatform.electron() ? "程序启动时自动播放上次歌曲" : "大部分浏览器不支持自动播放功能" }}
         </n-text>
       </div>
-      <n-switch v-model:value="autoPlay" :disabled="checkPlatform.electron()" :round="false" />
+      <n-switch v-model:value="autoPlay" :disabled="!checkPlatform.electron()" :round="false" />
     </n-card>
     <n-card class="set-item">
       <div class="name">
@@ -54,7 +54,7 @@
     </n-card>
     <n-card class="set-item">
       <div class="name">显示前奏倒计时
-        <n-text class="tip">部分歌曲前奏可能存在显示错误</n-text>
+        <n-text class="tip">在播放时显示前奏倒计时</n-text>
       </div>
       <n-switch v-model:value="countDownShow" :round="false" />
     </n-card>
@@ -89,7 +89,7 @@
                 value: 'cover',
               },
               {
-                label: '唱片模式',
+                label: '唱片模式 (不推荐)',
                 value: 'record',
               },
             ]"
@@ -115,6 +115,7 @@
               {
                 label: '流体效果',
                 value: 'animation-legacy',
+                disabled: true
               },
               {
                 label: '封面模糊',

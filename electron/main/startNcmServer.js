@@ -1,4 +1,4 @@
-import netEaseApi from "NeteaseCloudMusicApi";
+import netEaseApi from "@neteaseapireborn/api";
 import checkPort from "@main/utils/checkPort";
 
 /**

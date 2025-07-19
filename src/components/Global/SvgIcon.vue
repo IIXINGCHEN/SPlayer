@@ -84,6 +84,21 @@
           />
         </g>
       </svg>
+      <!-- 捐赠 -->
+      <svg
+        v-if="icon === 'donate'"
+        xmlns="http://www.w3.org/2000/svg"
+        width="32"
+        height="32"
+        viewBox="0 0 24 24"
+        class="svg-icon"
+      >
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 21C7 17 3 13.5 3 9.5C3 6.5 5.5 4 8.5 4C10.1 4 11.6 4.8 12.5 6C13.4 4.8 14.9 4 16.5 4C19.5 4 22 6.5 22 9.5C22 13.5 18 17 12 21Z"/>
+          <path d="M12 11V14" stroke-linecap="round"/>
+          <circle cx="12" cy="9" r="1" fill="currentColor"/>
+        </g>
+      </svg>
     </template>
   </template>
 </template>

@@ -5,7 +5,7 @@
       "destination": "/index.html"
     },
     {
-      "source": "/api/netease/:apiurl*",
+      "source": "/api/:apiurl*",
       "destination": "https://music-api.focalors.ltd/:apiurl*"
     },
     {

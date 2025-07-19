@@ -38,7 +38,7 @@ const qrCheckInterval = ref(null);
 const qrStatusCode = ref(801);
 const qrCodeTip = {
   800: "二维码过期，即将重试",
-  801: "请打开云音乐 APP 扫码登录",
+  801: "请打开网易云音乐 APP 扫码登录",
   802: "扫描成功，请在客户端确认登录",
   803: "登录成功",
 };
