@@ -38,9 +38,20 @@
                 </n-icon>
               </template>
             </n-tag>
-            <n-text class="tip">下载歌曲的同时下载歌曲元信息, 注意要给两个都开启</n-text>
+            <n-text class="tip">下载歌曲的同时下载歌曲元信息</n-text>
           </div>
           <n-switch v-model:value="downloadMeta" :disabled="!checkPlatform.electron" :round="false" />
+        </n-card>
+        <n-card class="set-item">
+          <div class="name">
+            音源选择
+            <n-text class="tip">选择下载歌曲的音源</n-text>
+            <n-alert v-if="selectedSource === 'meting1' || selectedSource === 'meting2'" type="warning" show-icon>
+              注意: MetingAPI不支持音质选择
+            </n-alert>
+          </div>
+          <n-select v-model:value="selectedSource" :options="sourceOptions" :disabled="downloadStatus"
+            placeholder="选择音源" />
         </n-card>
         <n-card class="set-item">
           <div class="name">
@@ -55,9 +66,6 @@
           <n-text class="tip" depth="3">
             当前选择：{{ selectedQuality }}kbps{{ selectedQuality >= 740 ? ' (FLAC)' : '' }}
           </n-text>
-          <n-text class="tip" depth="3">
-            音源来自UnblockNeteaseMusic的pyncmd音源
-          </n-text>  
         </n-card>
         <n-card class="set-item">
           <div class="name">下载歌曲时同时下载封面</div>
@@ -91,7 +99,7 @@ import { ref, onMounted, onUnmounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { siteData, siteSettings } from "@/stores";
-import { getSongDetail, getSongLyricLegacy, getSongDownloadNew } from "@/api/song";
+import { getSongDetail, getSongLyricLegacy, getSongDownloadFromPyncmd, getSongDownload, getMetingSongDownload } from "@/api/song";
 import { downloadFile, checkPlatform } from "@/utils/helper";
 import formatData from "@/utils/formatData";
 
@@ -166,7 +174,19 @@ const qualityOptions = ref([
     description: '超高解析度无损'
   }
 ]);
+// 音源选项
+const sourceOptions = ref([
+  { label: '默认源 (pyncmd)', value: 'pyncmd' },
+  { label: '网易云音乐 (部分歌曲需登陆黑胶账号)', value: 'netease' },
+  { label: 'GD音乐台', value: 'gd' },
+  { label: '岑鬼鬼音乐API (meting)', value: 'meting1' },
+  { label: '祈杰音乐源 (meting)', value: 'meting2' }
+])
+
+const selectedSource = ref('pyncmd'); // 默认选择pyncmd音源
 const selectedQuality = ref(320); // 默认选择超清音质
+
+
 // 歌曲下载
 const toSongDownload = async (song, lyric, tlyric) => {
   try {
@@ -174,17 +194,35 @@ const toSongDownload = async (song, lyric, tlyric) => {
     console.log(song, lyric, tlyric);
     downloadStatus.value = true;
     // 获取下载数据
-    const result = await getSongDownloadNew({
-      id: song?.id,
-      br: selectedQuality.value
-    });
+    if (selectedSource.value === 'netease') {
+      var result = await getSongDownload(song?.id, selectedQuality.value * 1000);
+    } else if (selectedSource.value === 'pyncmd') {
+      var result = await getSongDownloadFromPyncmd({
+        id: song?.id,
+        br: selectedQuality.value
+      });
+    } else if (selectedSource.value === 'gd') {  
+      var result = await getSongDownloadFromPyncmd({  // 暂时设定为pyncmd音源, 因为pyncmd就是GD音乐源
+        id: song?.id,
+        br: selectedQuality.value
+      });
+    } else if (selectedSource.value === 'meting1' || selectedSource.value === 'meting2') {
+      // meting 源直接返回下载 url
+      var url = await getMetingSongDownload(song?.id, selectedSource.value);
+      var result = { data: { url } };
+    } else {
+      $message.error("未知音源，请选择正确的音源");
+      downloadStatus.value = false;
+      return;
+    }
+    
     console.log("下载数据：", result);
-    // 检查 result.data 和 result.data.url 是否存在
     if (!result.data) {
       downloadStatus.value = false;
       console.error("下载数据无效：", result);
       return $message.error("下载失败，请重试");
     }
+
     // 开始下载
     if (!downloadPath.value && checkPlatform.electron()) {
       $notification["warning"]({
@@ -193,6 +231,7 @@ const toSongDownload = async (song, lyric, tlyric) => {
         duration: 3000,
       });
     }
+
     // 获取下载结果
     const isDownloaded = await downloadFile({
       type: fileType,

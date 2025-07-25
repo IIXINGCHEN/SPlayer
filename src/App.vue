@@ -140,9 +140,10 @@ if ("serviceWorker" in navigator) {
       });
     } else {
       console.info("站点资源有更新，请刷新以应用更新");
-      $message.info("有PWA更新推送, 刷新页面以应用更新", {
-        closable: true,
-        duration: 0,
+      $notification.create({
+        title: "🎉 有更新啦",
+        content: "检测到网站内资源有更新，是否刷新网站以应用更新？",
+        meta: "当前版本 v " + (packageJson.version || "1.0.0"),
         action: () =>
           h(
             NButton,
@@ -150,13 +151,18 @@ if ("serviceWorker" in navigator) {
               text: true,
               type: "primary",
               onClick: () => {
-                location.reload();
+                window.location.reload(true);
               },
             },
             {
-              default: () => "刷新页面",
+              default: () => "更新",
             },
           ),
+        onAfterLeave: () => {
+          $message.info("已取消本次更新，更新将在下次启动软件后生效", {
+            duration: 6000,
+          });
+        },
       });
     }
   });
@@ -266,7 +272,7 @@ onMounted(async () => {
   // 自动签到
   if (autoSignIn.value) await userSignIn();
   // 检查更新
-  if (autoCheckUpdates.value) checkUpdates();
+  // if (autoCheckUpdates.value) checkUpdates();
   // 显示公告
   showAnnouncements();
   // 显示用户协议

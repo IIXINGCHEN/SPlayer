@@ -127,14 +127,14 @@ const phoneLogin = (e) => {
               // 储存登录信息
               emit("setLoginData", result);
             } else {
-              $message.error("登录出错，请重试");
+              $message.error("登录出现问题:", result.message);
             }
           }
         }
       } catch (error) {
         phoneFormData.value.captcha = null;
         console.error("登录出错：", error);
-        $message.error("登录出错，请重试");
+        $message.error("登录出现问题:", error);
       }
     } else {
       $message.error("请检查你的输入");

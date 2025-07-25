@@ -7,13 +7,15 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm install pnpm -g
+
+RUN pnpm install
 
 COPY . .
 
 RUN [ ! -e ".env" ] && cp .env.example .env || true
 
-RUN npm run build
+RUN pnpm run build
 
 # nginx
 FROM nginx:1.25.3-alpine-slim as app
@@ -24,6 +26,6 @@ COPY --from=builder /app/nginx.conf /etc/nginx/conf.d/default.conf
 
 RUN apk add --no-cache npm
 
-RUN npm install -g NeteaseCloudMusicApi
+RUN pnpm install -g @neteaseapireborn/api
 
-CMD nginx && npx NeteaseCloudMusicApi
+CMD nginx && npx @neteaseapireborn/api@latest

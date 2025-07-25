@@ -51,7 +51,7 @@
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import PageTransition from "@/components/Global/PageTransition.vue";
-import { getGreetings } from "@/utils/timeTools";
+import { getGreetings } from "@/utils/time.ts";
 import {
   getDailyRec,
   getPersonalized,

@@ -38,7 +38,6 @@
 - 📅 自动每日签到及云贝签到
 - 🎨 封面主题色自适应
 - 🌚 Light / Dark 模式自动切换
-- 📁 本地歌曲管理及分类（建议先用 [音乐标签](https://www.cnblogs.com/vinlxc/p/11347744.html) 匹配后再使用）
 - 🎵 **支持播放部分无版权歌曲（可能与原曲不完全匹配）**
 - ⬇️ 下载歌曲（最高支持 Hi-Res）
 - ➕ 新建歌单及歌单编辑
@@ -99,12 +98,27 @@
 
 </details>
 
-### 本地构建
+## 📦 桌面版本
 
-> [!WARNING]
->
-> 由于本项目对 electron 框架做了部分破坏性修改，故不提供安装版，仅提供可部署的网页版本。
-> 请尽量拉取最新分支后使用本地构建方式，在线部署的仓库可能更新不及时。
+本项目本身不提供桌面版本, 但是可以自己构建桌面版本. 桌面端目前处于测试阶段, 部分漏洞可能没能及时修复
+
+1. 本地部署需安装 [Node.js](https://nodejs.org/zh-cn/)。请下载最新稳定版。
+2. 安装 pnpm
+
+   ```bash
+   npm install pnpm -g
+   ```
+
+3. 克隆仓库并拉取至本地，此处不再赘述
+4. 使用 `pnpm install` 安装依赖（如遇网络错误可用国内镜像源）
+5. 复制 `/.env.example` 文件并重命名为 `/.env` 并修改配置
+6. 打包客户端，请根据你的系统类型选择，打包成功后会输出安装包或可执行文件在 `/dist` 目录，可自行安装
+
+   | 命令               | 系统类型 |
+   | ------------------ | -------- |
+   | `pnpm build:win`   | Windows  |
+   | `pnpm build:linux` | Linux    |
+   | `pnpm build:mac`   | MacOS    |
 
 ## 🐋 Docker 部署
 
@@ -114,15 +128,16 @@
 
 ### 🔧 部署依赖
 
-1. 本程序依赖 [NeteaseCloudMusicApi](https://github.com/neteasecloudmusicapireborn/api) 及 [UNM-Server](https://act.focalors.ltd/unm-server)（可选，已归档），请按步骤部署并确保可在线访问。
+1. 本程序依赖 [NeteaseCloudMusicApi](https://github.com/neteasecloudmusicapireborn/api)，请按步骤部署并确保可在线访问。
+
+> [!IMPORTANT]
+>
+> 现在已经使用`网易云音乐Api Reborn`版本, 支持`UNM-Server`的所有功能
+> 如果你仍然想要部署`UNM-Server`, 请转到[long-time-support-version](https://github.com/IamFurina/SPlayer/tree/long-time-support-version)分支
 
 #### 网易云API部署（网易云音乐API Reborn）
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/iamhutao-projects/clone?repository-url=https://github.com/neteasecloudmusicapireborn/api)
-
-#### UNM-Server部署（可选，已过时）
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/iamhutao-projects/clone?repository-url=https://github.com/neteasecloudmusicapireborn/Unm)
 
 #### TTML歌词API部署（可选）
 
@@ -134,17 +149,11 @@
 
 2. 点击本仓库右上角 `Fork`，复制到你的 GitHub 账号
 3. 复制 `/.env.example` 文件并重命名为 `/.env`
-4. 将 `.env` 文件中的 `RENDERER_VITE_SERVER_URL` 和 `VITE_UNM_API` 改为第一步得到的 API 地址
-
-   > [!IMPORTANT]
-   >
-   > 如果你用的是 [网易云音乐API Reborn](https://github.com/neteasecloudmusicapireborn/api)，只需将 `https://api.example.com/song/url` 填入 `VITE_UNM_API` 配置即可
-
+4. 将 `.env` 文件中的 `RENDERER_VITE_SERVER_URL` 改为第一步得到的 API 地址
 5. 将 `.env` 文件中的 `RENDERER_VITE_SITE_URL` 改为你的站点地址，用于解决跨域问题
 
    ```dotenv
    RENDERER_VITE_SERVER_URL = "https://api.example.com";
-   VITE_UNM_API = "https://unm.example.com";
    RENDERER_VITE_SITE_URL = "https://player.example.com";
    ```
 
@@ -157,26 +166,22 @@
    >     "destination": "/index.html"
    >   },
    >   {
-   >     "source": "/api/netease/:apiurl*",
+   >     "source": "/api/:apiurl*",
    >     "destination": "https://你的网易云api域名/:apiurl*"
-   >   },
-   >   {
-   >     "source": "/api/unblock/:match*",
-   >     "destination": "https://你的unmapi域名/:match*"
    >   }
    > ]
    > ```
    >
    > 随后在 `.env` 里填写：
    >
-   > ```dotenv
+   > ```
    > ## 使用同级域名API
    > RENDERER_VITE_SITE_ROOT = true
    > ```
 
 6. 将 `Build and Output Settings` 的 `Output Directory` 改为 `out/renderer`
 
-   ![build](/screenshots/build.png)
+   ![build](/screenshots/build.jpg)
 
 7. 点击 `Deploy`，即可成功部署
 
@@ -213,32 +218,13 @@
 
 5. 将站点运行目录设置为 `out/renderer`
 
-## ⚙️ 本地部署
-
-1. 本地部署需安装 [Node.js](https://nodejs.org/zh-cn/)。请下载最新稳定版。
-2. 安装 pnpm
-
-   ```bash
-   npm install pnpm -g
-   ```
-
-3. 克隆仓库并拉取至本地，此处不再赘述
-4. 使用 `pnpm install` 安装依赖（如遇网络错误可用国内镜像源）
-5. 复制 `/.env.example` 文件并重命名为 `/.env` 并修改配置
-6. 打包客户端，请根据你的系统类型选择，打包成功后会输出安装包或可执行文件在 `/dist` 目录，可自行安装
-
-   | 命令               | 系统类型 |
-   | ------------------ | -------- |
-   | `pnpm build:win`   | Windows  |
-   | `pnpm build:linux` | Linux    |
-   | `pnpm build:mac`   | MacOS    |
-
 ## 😘 鸣谢
 
 特别感谢以下项目为本项目提供支持与灵感：
 
 - [原版SPlayer](https://github.com/imsyy/splayer)
 - [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
+- [NeteaseCloudMusicApiReborn](https://github.com/NeteaseCloudMusicApiReborn/api)
 - [YesPlayMusic](https://github.com/qier222/YesPlayMusic)
 - [UnblockNeteaseMusic](https://github.com/UnblockNeteaseMusic/server)
 - [Vue-mmPlayer](https://github.com/maomao1996/Vue-mmPlayer)
@@ -475,16 +461,11 @@
 
 ## 📄 todo列表
 
-- [x] 支持清除pwa缓存
-- [x] 支持Apple Music-Like Lyrics
-  > - [x] 解决歌词处理问题
-- [x] 解灰支持酷我源
+- [x] 使用网易云音乐API Rebron
+- [ ] 解灰支持酷我源
 - [ ] 修复imsyy的陈年老bug
-- [ ] 同步dev分支
-- [x] 解决跨资源共享问题
 - [ ] 支持多语言
-- [x] 支持修改全局字体
-  > - [x] 同时支持单独修改歌词字体
+
 
 ## ⭐ Star History
 

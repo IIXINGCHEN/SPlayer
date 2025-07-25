@@ -50,7 +50,17 @@
           替换无法播放的歌曲链接, 如VIP和受限歌曲等
         </n-text>
       </div>
-      <n-switch v-model:value="useUnmServer" :disabled="checkPlatform.electron()" :round="false" />
+      <n-switch v-model:value="useUnmServer"  :round="false" />
+    </n-card>
+    <n-card class="set-item">
+      <div class="name">
+        自定义音乐源
+        <n-text class="tip">多个源用逗号分隔，支持 pyncmd, qq, kuwo, migu, kugou</n-text>
+      </div>
+      <n-checkbox-group v-model:value="musicSourceChecked" :disabled="!useUnmServer" style="margin-bottom: 8px;">
+        <n-checkbox v-for="item in musicSourceOptions" :key="item.value" :value="item.value">{{ item.label }}</n-checkbox>
+      </n-checkbox-group>
+      <n-input v-model:value="settings.customMusicSource" :disabled="!useUnmServer" />
     </n-card>
     <n-card class="set-item">
       <div class="name">显示前奏倒计时
@@ -165,6 +175,7 @@
 import { storeToRefs } from "pinia";
 import { siteSettings } from "@/stores";
 import { checkPlatform } from "@/utils/helper";
+import { ref, watch } from "vue";
 
 const settings = siteSettings();
 const {
@@ -182,6 +193,30 @@ const {
   showSpectrums,
   useMusicCache,
 } = storeToRefs(settings);
+
+// 音源选项
+const musicSourceOptions = [
+  { label: "第三方网易云(pyncmd)", value: "pyncmd" },
+  { label: "QQ音乐(qq)", value: "qq" },
+  { label: "酷我(kuwo)", value: "kuwo" },
+  { label: "咪咕(migu)", value: "migu" },
+  { label: "酷狗(kugou)", value: "kugou" },
+];
+
+// 复选框选中项
+const musicSourceChecked = ref(settings.customMusicSource?.split(',').map(i => i.trim()).filter(Boolean) || []);
+
+// 复选框变化时同步到输入框
+watch(musicSourceChecked, (val) => {
+  settings.customMusicSource = val.join(",");
+});
+
+// 输入框变化时同步到复选框
+watch(() => settings.customMusicSource, (val) => {
+  if (typeof val === 'string') {
+    musicSourceChecked.value = val.split(',').map(i => i.trim()).filter(Boolean);
+  }
+});
 
 // 音质数据
 const songLevelData = {

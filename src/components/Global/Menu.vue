@@ -210,7 +210,7 @@ const menuOptions = computed(() => [
     key: "like",
     icon: renderIcon("star"),
   },
-  {
+  /*{
     label: () =>
       h(
         RouterLink,
@@ -222,9 +222,8 @@ const menuOptions = computed(() => [
         () => ["本地歌曲"],
       ),
     key: "local",
-    show: checkPlatform.electron(),
     icon: renderIcon("folder-open"),
-  },
+  },*/
   {
     label: () =>
       h(

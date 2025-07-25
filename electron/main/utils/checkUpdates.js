@@ -1,8 +1,8 @@
 import { dialog } from "electron";
 import { is } from "@electron-toolkit/utils";
-import pkg from "electron-updater";
+// import pkg from "electron-updater";
 
-const { autoUpdater } = pkg;
+// const { autoUpdater } = pkg;
 
 // 更新弹窗
 const hasNewVersion = (info) => {
@@ -26,29 +26,15 @@ const hasNewVersion = (info) => {
 export const configureAutoUpdater = () => {
   if (is.dev) return false;
 
-  // 监听下载进度事件
-  autoUpdater.on("download-progress", (progressObj) => {
-    console.log(`更新下载进度: ${progressObj.percent}%`);
-  });
 
-  // 下载完成
-  autoUpdater.on("update-downloaded", () => {
-    // 显示安装弹窗
-    dialog
-      .showMessageBox({
-        title: "下载完成",
-        message: "新版本已下载完成，是否现在安装？",
-        buttons: ["是", "稍后"],
-        type: "question",
-      })
-      .then((result) => {
-        if (result.response === 0) {
-          // 安装更新
-          autoUpdater.quitAndInstall();
-        }
-      });
-  });
 
+  // 自动更新已禁用
+  // autoUpdater.on("download-progress", (progressObj) => { /* ... */ });
+  // autoUpdater.on("update-downloaded", () => { /* ... */ autoUpdater.quitAndInstall(); });
+  // autoUpdater.on("error", (err) => { /* ... */ });
+  // autoUpdater.on("update-available", (info) => { hasNewVersion(info); });
+  // autoUpdater.checkForUpdatesAndNotify();
+  // autoUpdater.downloadUpdate();
   // 下载失败
   autoUpdater.on("error", (err) => {
     console.error("下载更新失败:", err);

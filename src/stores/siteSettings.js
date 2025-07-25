@@ -41,6 +41,7 @@ const useSiteSettingsStore = defineStore("siteSettings", {
       showPlaylistCount: true, // 是否显示播放列表数量
       showSpectrums: false, // 是否显示音乐频谱
       useMusicCache: false, // 是否采用音乐缓存
+      customMusicSource: "pyncmd,qq,kuwo,migu,kugou", // 自定义音乐源
       // 数量部分
       loadSize: 50, // 每页加载数量
       // 歌词部分

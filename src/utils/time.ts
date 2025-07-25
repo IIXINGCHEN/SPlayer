@@ -7,6 +7,23 @@ dayjs.extend(duration);
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
 
+
+
+
+/**
+ * 歌曲时长时间戳转换
+ * @param {number} mss 毫秒数
+ * @returns {string} 格式为 "mm:ss" 的字符串
+ */
+export const getSongTime = (mss: number) => {
+  const minutes: number = Math.floor(mss / (1000 * 60));
+  let seconds: any = Math.floor((mss % (1000 * 60)) / 1000);
+  if (seconds < 10) {
+    seconds = `0${seconds}`;
+  }
+  return `${minutes}:${seconds}`;
+};
+
 // 秒转为时间
 export const secondsToTime = (seconds: number) => {
   if (seconds < 3600) {
@@ -97,7 +114,7 @@ export const calculateCurrentTime = (progress: number, duration: number): number
 /**
  * 获取当前时间段的问候语
  */
-export const getGreeting = () => {
+export const getGreetings = () => {
   const hour = dayjs().hour();
   if (hour < 6) {
     return "凌晨好";

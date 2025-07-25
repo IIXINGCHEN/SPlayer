@@ -55,6 +55,7 @@ const getQrData = async () => {
   } catch (error) {
     clearInterval(qrCheckInterval.value);
     console.error("二维码获取失败：", error);
+    $message("获取登陆二维码出现问题: ", error)
   }
 };
 
@@ -92,7 +93,7 @@ const checkQrStatus = (key) => {
               // 储存登录信息
               emit("setLoginData", res);
             } else {
-              $message.error("登录出错，请重试");
+              $message.error("登录出现问题: ", error);
               getQrData();
             }
             break;
@@ -103,7 +104,7 @@ const checkQrStatus = (key) => {
     }, 1000);
   } catch (error) {
     clearInterval(qrCheckInterval.value);
-    console.error("登录出错：", error);
+    console.error("登录出现问题：", error);
   }
 };
 

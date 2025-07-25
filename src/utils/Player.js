@@ -1,6 +1,6 @@
 import { Howl, Howler } from "howler";
 import { musicData, siteStatus, siteSettings } from "@/stores";
-import { getSongUrl, getSongLyric, songScrobble, getMusicNumUrl, getSongLyricLegacy } from "@/api/song";
+import { getSongUrl, getSongLyric, songScrobble, getMusicNumUrlNew, getSongLyricLegacy } from "@/api/song";
 import { getSongTTML } from "@/api/ttml";
 import { checkPlatform, getLocalCoverData, getBlobUrlFromUrl } from "@/utils/helper";
 import { decode as base642Buffer } from "@/utils/base64";
@@ -196,11 +196,11 @@ const getFromUnblockMusic = async (data, status, playNow) => {
     // 调用解灰
     let musicUrl = null;
     try {
-      let response = await getMusicNumUrl(data.id);
+      const settings = siteSettings();
+      let response = await getMusicNumUrlNew(data.id, settings.customMusicSource);
       console.log(response);
       if (response?.code === 200 && response?.data) {
         if (response.data.proxyUrl) {
-          // musicUrl = response.data.url.replace(/^http:\/\/lx\.sycdn\.kuwo\.cn\//, "/api/kuwourl/songcdn/"); 
           musicUrl = response.data.proxyUrl
         } else {
           musicUrl = response.data.url;

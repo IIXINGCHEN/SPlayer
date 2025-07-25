@@ -48,7 +48,7 @@
         />
       </n-flex>
     </n-card>
-    <n-card class="set-item">
+    <!--n-card class="set-item">
       <div class="name">自定义字体仅在歌词区域生效</div>
       <n-switch
         v-model:value="justLyricArea"
@@ -56,21 +56,22 @@
         :disabled="systemFonts === 'HarmonyOS Sans'"
         @update:value="settings.changeSystemFonts(systemFonts)"
       />
-    </n-card>
+    </n-card-->
     <n-card class="set-item">
       <div class="name">任务栏显示歌曲播放进度</div>
       <n-switch
         v-model:value="showTaskbarProgress"
         :round="false"
+        :disabled="!checkPlatform.electron()"
         @update:value="closeTaskbarProgress"
       />
     </n-card>
     <n-card class="set-item">
       <div class="name">
         自动检查更新
-        <n-text class="tip">在开启软件时自动检查更新</n-text>
+        <n-text class="tip">暂不支持</n-text>
       </div>
-      <n-switch v-model:value="autoCheckUpdates" :round="false" />
+      <n-switch v-model:value="autoCheckUpdates" :round="false" :disabled="true"/>
     </n-card>
   </div>
   <div v-else class="set-type">
@@ -125,3 +126,56 @@ onMounted(() => {
   getSystemFonts();
 });
 </script>
+<style lang="scss" scoped>
+.set-type {
+  .n-collapse {
+    background-color: transparent;
+    border: none;
+
+    :deep(.n-collapse-item) {
+      margin-bottom: 16px;
+      border: none;
+
+      .n-collapse-item__header {
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        background-color: transparent;
+      }
+
+      .n-collapse-item__content-wrapper {
+        border: none;
+      }
+
+      .n-collapse-item__content-inner {
+        padding: 8px 0;
+      }
+    }
+  }
+
+  .set-item {
+    margin-bottom: 12px;
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+
+    .name {
+      margin-bottom: 8px;
+      font-size: 14px;
+
+      .tip {
+        display: block;
+        margin-top: 4px;
+        font-size: 12px;
+        opacity: 0.6;
+      }
+    }
+
+    .set {
+      width: 100%;
+    }
+  }
+}
+</style>

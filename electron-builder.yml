@@ -1,8 +1,8 @@
 # 应用程序的唯一标识符
-appId: com.imsyy.splayer
+appId: com.iamfurina.splayer
 # 应用程序的产品名称
 productName: SPlayer
-copyright: Copyright © imsyy 2023
+copyright: Copyright © IamFurina 2025
 # 构建资源所在的目录
 directories:
   buildResources: build
@@ -89,7 +89,7 @@ linux:
     - rpm
     - tar.gz
   # 维护者信息
-  maintainer: imsyy.top
+  maintainer: focalors.ltd
   # 应用程序类别
   category: Audio;Music
 # AppImage 配置
@@ -104,5 +104,5 @@ publish:
   provider: github
   # 自动更新检查的 URL
   # url: https://example.com/auto-updates
-  owner: "imsyy"
+  owner: "IamFurina"
   repo: "SPlayer"

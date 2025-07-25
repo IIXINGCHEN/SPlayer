@@ -97,13 +97,14 @@
             ]"
             class="set"
             @update:value="updateWebFont"
+            :disabled="checkPlatform.electron()"
           />
         </n-card>
         <n-card class="set-item">
           <div class="name">字体加粗
             <n-text class="tip">开启后网页字体将会被加粗</n-text>
           </div>
-          <n-switch v-model:value="settings.fontBold" :round="false" @update:value="updateWebFont(settings.webFonts)" />
+          <n-switch v-model:value="settings.fontBold" :round="false" @update:value="updateWebFont(settings.webFonts)"  :disabled="checkPlatform.electron()"/>
         </n-card>
       </n-collapse-item>
 
@@ -156,6 +157,7 @@
 import { storeToRefs } from "pinia";
 import { useOsTheme } from "naive-ui";
 import { siteSettings, siteStatus } from "@/stores";
+import { checkPlatform } from "@/utils/helper";
 
 const status = siteStatus();
 const settings = siteSettings();

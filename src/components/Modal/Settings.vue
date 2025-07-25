@@ -35,9 +35,10 @@
         >
           <n-tab name="setTab1">常规</n-tab>
           <n-tab name="setTab2">播放</n-tab>
-          <n-tab name="setTab3">歌词</n-tab>
-          <n-tab name="setTab4">下载</n-tab>
-          <n-tab name="setTab5">其他</n-tab>
+          <n-tab name="setTab3">系统</n-tab>
+          <n-tab name="setTab4">歌词</n-tab>
+          <n-tab name="setTab5">下载</n-tab>
+          <n-tab name="setTab6">其他</n-tab>
         </n-tabs>
         
         <!-- 添加跳转按钮 -->
@@ -71,6 +72,8 @@
           <General />
           <!-- 播放 -->
           <Player />
+          <!-- 系统 -->
+          <System />
           <!-- 歌词 -->
           <Lyrics />
           <!-- 下载 -->
@@ -92,6 +95,7 @@ import debounce from "@/utils/debounce";
 // 设置子项
 import General from "@/views/Setting/general.vue";
 import Player from "@/views/Setting/player.vue";
+import System from "@/views/Setting/system.vue";
 import Lyrics from "@/views/Setting/lyrics.vue";
 import Download from "@/views/Setting/download.vue";
 import Other from "@/views/Setting/other.vue";
@@ -127,9 +131,10 @@ const showModal = ref(false);
 const tabOptions = computed(() => [
   { label: '常规', value: 'setTab1' },
   { label: '播放', value: 'setTab2' },
-  { label: '歌词', value: 'setTab3' },
-  { label: '下载', value: 'setTab4' },
-  { label: '其他', value: 'setTab5' }
+  { label: '系统', value: 'setTab3' },
+  { label: '歌词', value: 'setTab4' },
+  { label: '下载', value: 'setTab5' },
+  { label: '其他', value: 'setTab6' }
 ]);
 
 // 计算滚动区域高度
